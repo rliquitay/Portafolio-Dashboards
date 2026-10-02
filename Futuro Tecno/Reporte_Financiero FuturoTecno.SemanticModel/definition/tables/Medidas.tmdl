@@ -23,306 +23,153 @@ table Medidas
 		formatString: 0.000\ %;-0.000\ %;0.000\ %
 		lineageTag: 9f0dcf49-3a38-46f3-bb92-dd01f849eecc
 
-	measure '06. Last Year Ingresos' =
-			
-			CALCULATE(
-			    [01. Total Ingresos],
-			    DATEADD(Calendario[Date],-1,YEAR)
-			)
+	measure '06. Last Year Ingresos' = ```
+			[Ingresos AA]
+			```
 		lineageTag: 07f66742-b754-4873-aba3-24682dde669b
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure '05. Last Month Ingresos' =
-			
-			CALCULATE(
-			    [01. Total Ingresos],
-			    DATEADD(Calendario[Date],-1,MONTH)
-			)
+	measure '05. Last Month Ingresos' = ```
+			[Ingresos Último Mes]
+			```
 		lineageTag: b77c7150-47e4-4e8f-a01a-dbdefdad617b
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure '07. % MoM Ingresos' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __mom = 
-			ROUND(
-			    DIVIDE(
-			        sum(FuturoTecno_2020_2022[Ingresos]) - [05. Last Month Ingresos],
-			        [05. Last Month Ingresos],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Ingresos % Var Mes]
 			RETURN
-			if (__mom < 0 ,
-			    __mom & "% " & __down_arrow,
-			    __mom & "% " & __up_arrow
-			)
-			
+			    IF (
+			        ISBLANK ( __v ),
+			        BLANK (),
+			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+			    )
 			```
 		lineageTag: 7e6c95c3-c131-443b-835b-410bb20babdb
 
 	measure '07. Color MoM Ingresos' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __mom = 
-			ROUND(
-			    DIVIDE(
-			        sum(FuturoTecno_2020_2022[Ingresos]) - [05. Last Month Ingresos],
-			        [05. Last Month Ingresos],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Ingresos % Var Mes]
 			RETURN
-			if (__mom < 0 ,
-			    "Red",
-			    "Green"
-			)
+			    IF ( __v * 1 < 0, "Red", "Green" )
 			```
 		lineageTag: e90afc79-1d14-4010-842f-d4548f764dc3
 
 	measure '08. Color YoY Ingresos' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __yoy = 
-			ROUND(
-			    DIVIDE(
-			        sum(FuturoTecno_2020_2022[Ingresos]) - [06. Last Year Ingresos],
-			        [06. Last Year Ingresos],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Ingresos % Var AA]
 			RETURN
-			if (__yoy < 0 ,
-			    "Red",
-			    "Green"
-			)
+			    IF ( __v * 1 < 0, "Red", "Green" )
 			```
 		lineageTag: dc83b5d2-8f10-426c-801b-0618ad5a576d
 
 	measure '08. % YoY Ingresos' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __yoy = 
-			ROUND(
-			    DIVIDE(
-			        sum(FuturoTecno_2020_2022[Ingresos]) - [06. Last Year Ingresos],
-			        [06. Last Year Ingresos],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Ingresos % Var AA]
 			RETURN
-			if (__yoy < 0 ,
-			    __yoy & "% " & __down_arrow,
-			    __yoy & "% " & __up_arrow
-			)
-			
+			    IF (
+			        ISBLANK ( __v ),
+			        BLANK (),
+			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+			    )
 			```
 		lineageTag: 9a9ba909-a56d-462a-9068-7afc00d92466
 
-	measure '09. Last Month Gastos' =
-			
-			CALCULATE(
-			    [02. Total Gastos],
-			    DATEADD(Calendario[Date],-1,MONTH)
-			)
+	measure '09. Last Month Gastos' = ```
+			[Gastos Último Mes]
+			```
 		lineageTag: ec5326a4-c0a5-451e-a41a-b0ff6e7eb674
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure '10. Last Year Gastos' =
-			
-			CALCULATE(
-			    [02. Total Gastos],
-			    DATEADD(Calendario[Date],-1,YEAR)
-			)
+	measure '10. Last Year Gastos' = ```
+			[Gastos AA]
+			```
 		lineageTag: 516d1e5b-be6c-47ca-9b8e-c9e6816b1898
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure '11. % MoM Gastos' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __mom = 
-			ROUND(
-			    DIVIDE(
-			        sum(FuturoTecno_2020_2022[Gastos]) - [09. Last Month Gastos],
-			        [09. Last Month Gastos],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Gastos % Var Mes]
 			RETURN
-			if (__mom < 0 ,
-			    __mom & "% " & __down_arrow,
-			    __mom & "% " & __up_arrow
-			)
+			    IF (
+			        ISBLANK ( __v ),
+			        BLANK (),
+			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * -1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+			    )
 			```
 		lineageTag: f9518abb-caee-49f5-81eb-878000f4d30f
 
 	measure '11. Color MoM Gastos' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __mom = 
-			ROUND(
-			    DIVIDE(
-			        sum(FuturoTecno_2020_2022[Gastos]) - [09. Last Month Gastos],
-			        [09. Last Month Gastos],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Gastos % Var Mes]
 			RETURN
-			if (__mom < 0 ,
-			    "Red",
-			    "Green"
-			)
+			    IF ( __v * -1 < 0, "Red", "Green" )
 			```
 		lineageTag: 810c5f0c-f1b4-4f8c-80a6-b57bc125b7f2
 
 	measure '12. % YoY Gastos' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __yoy = 
-			ROUND(
-			    DIVIDE(
-			        sum(FuturoTecno_2020_2022[Gastos]) - [10. Last Year Gastos],
-			        [10. Last Year Gastos],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Gastos % Var AA]
 			RETURN
-			if (__yoy < 0 ,
-			    __yoy & "% " & __down_arrow,
-			    __yoy & "% " & __up_arrow
-			)
-			
+			    IF (
+			        ISBLANK ( __v ),
+			        BLANK (),
+			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * -1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+			    )
 			```
 		lineageTag: 5f782431-566d-4007-a698-fd06c121b3b0
 
 	measure '12. Color YoY Gastos' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __yoy = 
-			ROUND(
-			    DIVIDE(
-			        sum(FuturoTecno_2020_2022[Gastos]) - [10. Last Year Gastos],
-			        [10. Last Year Gastos],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Gastos % Var AA]
 			RETURN
-			if (__yoy < 0 ,
-			    "Red",
-			    "Green"
-			)
+			    IF ( __v * -1 < 0, "Red", "Green" )
 			```
 		lineageTag: c8be8811-d5db-4953-8f07-ef2f2d8c1703
 
-	measure '13. Last Month Beneficios' =
-			
-			CALCULATE(
-			    [03. Total Beneficio],
-			    DATEADD(Calendario[Date],-1,MONTH)
-			)
+	measure '13. Last Month Beneficios' = ```
+			[Margen Último Mes]
+			```
 		lineageTag: 97539e38-21d7-44e9-a5f0-40d7ac6210ea
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure '14. Last Year Beneficios' =
-			
-			CALCULATE(
-			    [03. Total Beneficio],
-			    DATEADD(Calendario[Date],-1,YEAR)
-			)
+	measure '14. Last Year Beneficios' = ```
+			[Margen AA]
+			```
 		lineageTag: 7e01fc69-3db6-4105-983e-a1ffe295a1a2
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure '15. % MoM Beneficios' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __mom = 
-			ROUND(
-			    DIVIDE(
-			        [03. Total Beneficio] - [13. Last Month Beneficios],
-			        [13. Last Month Beneficios],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Margen % Var Mes]
 			RETURN
-			if (__mom < 0 ,
-			    __mom & "% " & __down_arrow,
-			    __mom & "% " & __up_arrow
-			)
+			    IF (
+			        ISBLANK ( __v ),
+			        BLANK (),
+			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+			    )
 			```
 		lineageTag: a75ed406-d734-40c5-b150-0053b1647e28
 
 	measure '15. Color MoM Beneficios' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __mom = 
-			ROUND(
-			    DIVIDE(
-			        [03. Total Beneficio] - [13. Last Month Beneficios],
-			        [13. Last Month Beneficios],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Margen % Var Mes]
 			RETURN
-			if (__mom < 0 ,
-			    "Red",
-			    "Green"
-			)
+			    IF ( __v * 1 < 0, "Red", "Green" )
 			```
 		lineageTag: a42fb93e-3df3-437b-bc62-dd3f497634a4
 
 	measure '16. % YoY Beneficios' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __yoy = 
-			ROUND(
-			    DIVIDE(
-			        [03. Total Beneficio] - [14. Last Year Beneficios],
-			        [14. Last Year Beneficios],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Margen % Var AA]
 			RETURN
-			if (__yoy < 0 ,
-			    __yoy & "% " & __down_arrow,
-			    __yoy & "% " & __up_arrow
-			)
+			    IF (
+			        ISBLANK ( __v ),
+			        BLANK (),
+			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+			    )
 			```
 		lineageTag: da61efc9-c2c6-4911-bf3b-c642047a381b
 
 	measure '16. Color YoY Beneficios' = ```
-			
-			var __up_arrow= UNICHAR(129137)
-			var __down_arrow= UNICHAR(129139)
-			var __yoy = 
-			ROUND(
-			    DIVIDE(
-			        [03. Total Beneficio] - [14. Last Year Beneficios],
-			        [14. Last Year Beneficios],
-			        0
-			    ) * 100, 
-			1)
+			VAR __v = [Margen % Var AA]
 			RETURN
-			if (__yoy < 0 ,
-			    "Red",
-			    "Green"
-			)
+			    IF ( __v * 1 < 0, "Red", "Green" )
 			```
 		lineageTag: 9d15b8f4-97d5-416b-8862-32902e951418
 
@@ -473,14 +320,10 @@ table Medidas
 			VAR _MesAnt    = [Ingresos Mes Anterior]
 			// ---- Plantilla ----
 			VAR _FechaFin = [KPI Fecha Fin]
-			VAR _Escala = COALESCE ( ABS ( _Mes ), ABS ( _Actual ) )
-			VAR _Fmt =
-			    SWITCH (
-			        TRUE (),
-			        _Escala >= 1000000, "$#,0.0,,\M;-$#,0.0,,\M",
-			        _Escala >= 1000, "$#,0.0,\K;-$#,0.0,\K",
-			        "$#,0;-$#,0"
-			    )
+			// Formato compacto: $175M, $8.9M, $950K
+			VAR _NumActual = VAR v = _Actual VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+			VAR _NumAA = VAR v = _AA VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+			VAR _NumMes = VAR v = _Mes VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
 			VAR _VarAA  = DIVIDE ( _Actual - _AA, ABS ( _AA ) )
 			VAR _VarMes = DIVIDE ( _Mes - _MesAnt, ABS ( _MesAnt ) )
 			VAR _TxtAA  = FORMAT ( _VarAA, "+0.0%;-0.0%;0.0%" )
@@ -516,19 +359,19 @@ table Medidas
 			            & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
 			                & "<div>"
 			                    & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
-			                    & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+			                    & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & _NumActual & "</div>"
 			                & "</div>"
 			                & _Icono
 			            & "</div>"
 			            & "<div style='display:flex;gap:16px;border-top:1px solid #E8EAED;padding-top:8px'>"
 			                & "<div style='flex:1'>"
 			                    & "<div style='" & _Label & "'>Año anterior (" & _Anio - 1 & ")</div>"
-			                    & "<div style='" & _Valor & "'>" & FORMAT ( _AA, _Fmt ) & "</div>"
+			                    & "<div style='" & _Valor & "'>" & _NumAA & "</div>"
 			                    & "<span style='" & _Pill & "color:" & _ColAA & ";background:" & _BgAA & "'>" & _PillAA & "</span>"
 			                & "</div>"
 			                & "<div style='flex:1'>"
 			                    & "<div style='" & _Label & "'>Último mes (" & _MesNom & " " & _Anio & ")</div>"
-			                    & "<div style='" & _Valor & "'>" & FORMAT ( _Mes, _Fmt ) & "</div>"
+			                    & "<div style='" & _Valor & "'>" & _NumMes & "</div>"
 			                    & "<span style='" & _Pill & "color:" & _ColMes & ";background:" & _BgMes & "'>" & _PillMes & "</span>"
 			                    & "<span style='" & _Label & ";margin-left:6px'>vs mes ant.</span>"
 			                & "</div>"
@@ -549,14 +392,10 @@ table Medidas
 			VAR _MesAnt    = [Gastos Mes Anterior]
 			// ---- Plantilla ----
 			VAR _FechaFin = [KPI Fecha Fin]
-			VAR _Escala = COALESCE ( ABS ( _Mes ), ABS ( _Actual ) )
-			VAR _Fmt =
-			    SWITCH (
-			        TRUE (),
-			        _Escala >= 1000000, "$#,0.0,,\M;-$#,0.0,,\M",
-			        _Escala >= 1000, "$#,0.0,\K;-$#,0.0,\K",
-			        "$#,0;-$#,0"
-			    )
+			// Formato compacto: $175M, $8.9M, $950K
+			VAR _NumActual = VAR v = _Actual VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+			VAR _NumAA = VAR v = _AA VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+			VAR _NumMes = VAR v = _Mes VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
 			VAR _VarAA  = DIVIDE ( _Actual - _AA, ABS ( _AA ) )
 			VAR _VarMes = DIVIDE ( _Mes - _MesAnt, ABS ( _MesAnt ) )
 			VAR _TxtAA  = FORMAT ( _VarAA, "+0.0%;-0.0%;0.0%" )
@@ -592,19 +431,19 @@ table Medidas
 			            & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
 			                & "<div>"
 			                    & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
-			                    & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+			                    & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & _NumActual & "</div>"
 			                & "</div>"
 			                & _Icono
 			            & "</div>"
 			            & "<div style='display:flex;gap:16px;border-top:1px solid #E8EAED;padding-top:8px'>"
 			                & "<div style='flex:1'>"
 			                    & "<div style='" & _Label & "'>Año anterior (" & _Anio - 1 & ")</div>"
-			                    & "<div style='" & _Valor & "'>" & FORMAT ( _AA, _Fmt ) & "</div>"
+			                    & "<div style='" & _Valor & "'>" & _NumAA & "</div>"
 			                    & "<span style='" & _Pill & "color:" & _ColAA & ";background:" & _BgAA & "'>" & _PillAA & "</span>"
 			                & "</div>"
 			                & "<div style='flex:1'>"
 			                    & "<div style='" & _Label & "'>Último mes (" & _MesNom & " " & _Anio & ")</div>"
-			                    & "<div style='" & _Valor & "'>" & FORMAT ( _Mes, _Fmt ) & "</div>"
+			                    & "<div style='" & _Valor & "'>" & _NumMes & "</div>"
 			                    & "<span style='" & _Pill & "color:" & _ColMes & ";background:" & _BgMes & "'>" & _PillMes & "</span>"
 			                    & "<span style='" & _Label & ";margin-left:6px'>vs mes ant.</span>"
 			                & "</div>"
@@ -625,14 +464,10 @@ table Medidas
 			VAR _MesAnt    = [Margen Mes Anterior]
 			// ---- Plantilla ----
 			VAR _FechaFin = [KPI Fecha Fin]
-			VAR _Escala = COALESCE ( ABS ( _Mes ), ABS ( _Actual ) )
-			VAR _Fmt =
-			    SWITCH (
-			        TRUE (),
-			        _Escala >= 1000000, "$#,0.0,,\M;-$#,0.0,,\M",
-			        _Escala >= 1000, "$#,0.0,\K;-$#,0.0,\K",
-			        "$#,0;-$#,0"
-			    )
+			// Formato compacto: $175M, $8.9M, $950K
+			VAR _NumActual = VAR v = _Actual VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+			VAR _NumAA = VAR v = _AA VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+			VAR _NumMes = VAR v = _Mes VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
 			VAR _VarAA  = DIVIDE ( _Actual - _AA, ABS ( _AA ) )
 			VAR _VarMes = DIVIDE ( _Mes - _MesAnt, ABS ( _MesAnt ) )
 			VAR _TxtAA  = FORMAT ( _VarAA, "+0.0%;-0.0%;0.0%" )
@@ -668,19 +503,19 @@ table Medidas
 			            & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
 			                & "<div>"
 			                    & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
-			                    & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+			                    & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & _NumActual & "</div>"
 			                & "</div>"
 			                & _Icono
 			            & "</div>"
 			            & "<div style='display:flex;gap:16px;border-top:1px solid #E8EAED;padding-top:8px'>"
 			                & "<div style='flex:1'>"
 			                    & "<div style='" & _Label & "'>Año anterior (" & _Anio - 1 & ")</div>"
-			                    & "<div style='" & _Valor & "'>" & FORMAT ( _AA, _Fmt ) & "</div>"
+			                    & "<div style='" & _Valor & "'>" & _NumAA & "</div>"
 			                    & "<span style='" & _Pill & "color:" & _ColAA & ";background:" & _BgAA & "'>" & _PillAA & "</span>"
 			                & "</div>"
 			                & "<div style='flex:1'>"
 			                    & "<div style='" & _Label & "'>Último mes (" & _MesNom & " " & _Anio & ")</div>"
-			                    & "<div style='" & _Valor & "'>" & FORMAT ( _Mes, _Fmt ) & "</div>"
+			                    & "<div style='" & _Valor & "'>" & _NumMes & "</div>"
 			                    & "<span style='" & _Pill & "color:" & _ColMes & ";background:" & _BgMes & "'>" & _PillMes & "</span>"
 			                    & "<span style='" & _Label & ";margin-left:6px'>vs mes ant.</span>"
 			                & "</div>"

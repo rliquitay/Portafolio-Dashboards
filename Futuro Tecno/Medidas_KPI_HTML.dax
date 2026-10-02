@@ -147,6 +147,112 @@ DEFINE
             [Margen Pct Último Mes] - [Margen Pct Mes Anterior]
         )
 
+    // ---------- Corrección de las medidas de las tarjetas nativas ------
+    // Antes usaban DATEADD(-1, MONTH) sobre todo el año (sumaban casi un año
+    // en vez del último mes). Ahora reutilizan las medidas base de las HTML.
+
+    MEASURE Medidas[05. Last Month Ingresos] =
+        [Ingresos Último Mes]
+
+    MEASURE Medidas[06. Last Year Ingresos] =
+        [Ingresos AA]
+
+    MEASURE Medidas[07. % MoM Ingresos] =
+        VAR __v = [Ingresos % Var Mes]
+        RETURN
+            IF (
+                ISBLANK ( __v ),
+                BLANK (),
+                FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+            )
+
+    MEASURE Medidas[07. Color MoM Ingresos] =
+        VAR __v = [Ingresos % Var Mes]
+        RETURN
+            IF ( __v * 1 < 0, "Red", "Green" )
+
+    MEASURE Medidas[08. % YoY Ingresos] =
+        VAR __v = [Ingresos % Var AA]
+        RETURN
+            IF (
+                ISBLANK ( __v ),
+                BLANK (),
+                FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+            )
+
+    MEASURE Medidas[08. Color YoY Ingresos] =
+        VAR __v = [Ingresos % Var AA]
+        RETURN
+            IF ( __v * 1 < 0, "Red", "Green" )
+
+    MEASURE Medidas[09. Last Month Gastos] =
+        [Gastos Último Mes]
+
+    MEASURE Medidas[10. Last Year Gastos] =
+        [Gastos AA]
+
+    MEASURE Medidas[11. % MoM Gastos] =
+        VAR __v = [Gastos % Var Mes]
+        RETURN
+            IF (
+                ISBLANK ( __v ),
+                BLANK (),
+                FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * -1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+            )
+
+    MEASURE Medidas[11. Color MoM Gastos] =
+        VAR __v = [Gastos % Var Mes]
+        RETURN
+            IF ( __v * -1 < 0, "Red", "Green" )
+
+    MEASURE Medidas[12. % YoY Gastos] =
+        VAR __v = [Gastos % Var AA]
+        RETURN
+            IF (
+                ISBLANK ( __v ),
+                BLANK (),
+                FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * -1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+            )
+
+    MEASURE Medidas[12. Color YoY Gastos] =
+        VAR __v = [Gastos % Var AA]
+        RETURN
+            IF ( __v * -1 < 0, "Red", "Green" )
+
+    MEASURE Medidas[13. Last Month Beneficios] =
+        [Margen Último Mes]
+
+    MEASURE Medidas[14. Last Year Beneficios] =
+        [Margen AA]
+
+    MEASURE Medidas[15. % MoM Beneficios] =
+        VAR __v = [Margen % Var Mes]
+        RETURN
+            IF (
+                ISBLANK ( __v ),
+                BLANK (),
+                FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+            )
+
+    MEASURE Medidas[15. Color MoM Beneficios] =
+        VAR __v = [Margen % Var Mes]
+        RETURN
+            IF ( __v * 1 < 0, "Red", "Green" )
+
+    MEASURE Medidas[16. % YoY Beneficios] =
+        VAR __v = [Margen % Var AA]
+        RETURN
+            IF (
+                ISBLANK ( __v ),
+                BLANK (),
+                FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
+            )
+
+    MEASURE Medidas[16. Color YoY Beneficios] =
+        VAR __v = [Margen % Var AA]
+        RETURN
+            IF ( __v * 1 < 0, "Red", "Green" )
+
     // ---------- Tarjetas HTML -------------------------------------------
     // Las 4 tarjetas usan la misma plantilla: solo cambia el bloque
     // "Parámetros". _Sentido = 1 si subir es bueno, -1 si subir es malo.
@@ -163,14 +269,10 @@ DEFINE
         VAR _MesAnt    = [Ingresos Mes Anterior]
         // ---- Plantilla ----
         VAR _FechaFin = [KPI Fecha Fin]
-        VAR _Escala = COALESCE ( ABS ( _Mes ), ABS ( _Actual ) )
-        VAR _Fmt =
-            SWITCH (
-                TRUE (),
-                _Escala >= 1000000, "$#,0.0,,\M;-$#,0.0,,\M",
-                _Escala >= 1000, "$#,0.0,\K;-$#,0.0,\K",
-                "$#,0;-$#,0"
-            )
+        // Formato compacto: $175M, $8.9M, $950K
+        VAR _NumActual = VAR v = _Actual VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+        VAR _NumAA = VAR v = _AA VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+        VAR _NumMes = VAR v = _Mes VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
         VAR _VarAA  = DIVIDE ( _Actual - _AA, ABS ( _AA ) )
         VAR _VarMes = DIVIDE ( _Mes - _MesAnt, ABS ( _MesAnt ) )
         VAR _TxtAA  = FORMAT ( _VarAA, "+0.0%;-0.0%;0.0%" )
@@ -206,19 +308,19 @@ DEFINE
                     & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
                         & "<div>"
                             & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
-                            & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+                            & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & _NumActual & "</div>"
                         & "</div>"
                         & _Icono
                     & "</div>"
                     & "<div style='display:flex;gap:16px;border-top:1px solid #E8EAED;padding-top:8px'>"
                         & "<div style='flex:1'>"
                             & "<div style='" & _Label & "'>Año anterior (" & _Anio - 1 & ")</div>"
-                            & "<div style='" & _Valor & "'>" & FORMAT ( _AA, _Fmt ) & "</div>"
+                            & "<div style='" & _Valor & "'>" & _NumAA & "</div>"
                             & "<span style='" & _Pill & "color:" & _ColAA & ";background:" & _BgAA & "'>" & _PillAA & "</span>"
                         & "</div>"
                         & "<div style='flex:1'>"
                             & "<div style='" & _Label & "'>Último mes (" & _MesNom & " " & _Anio & ")</div>"
-                            & "<div style='" & _Valor & "'>" & FORMAT ( _Mes, _Fmt ) & "</div>"
+                            & "<div style='" & _Valor & "'>" & _NumMes & "</div>"
                             & "<span style='" & _Pill & "color:" & _ColMes & ";background:" & _BgMes & "'>" & _PillMes & "</span>"
                             & "<span style='" & _Label & ";margin-left:6px'>vs mes ant.</span>"
                         & "</div>"
@@ -237,14 +339,10 @@ DEFINE
         VAR _MesAnt    = [Gastos Mes Anterior]
         // ---- Plantilla ----
         VAR _FechaFin = [KPI Fecha Fin]
-        VAR _Escala = COALESCE ( ABS ( _Mes ), ABS ( _Actual ) )
-        VAR _Fmt =
-            SWITCH (
-                TRUE (),
-                _Escala >= 1000000, "$#,0.0,,\M;-$#,0.0,,\M",
-                _Escala >= 1000, "$#,0.0,\K;-$#,0.0,\K",
-                "$#,0;-$#,0"
-            )
+        // Formato compacto: $175M, $8.9M, $950K
+        VAR _NumActual = VAR v = _Actual VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+        VAR _NumAA = VAR v = _AA VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+        VAR _NumMes = VAR v = _Mes VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
         VAR _VarAA  = DIVIDE ( _Actual - _AA, ABS ( _AA ) )
         VAR _VarMes = DIVIDE ( _Mes - _MesAnt, ABS ( _MesAnt ) )
         VAR _TxtAA  = FORMAT ( _VarAA, "+0.0%;-0.0%;0.0%" )
@@ -280,19 +378,19 @@ DEFINE
                     & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
                         & "<div>"
                             & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
-                            & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+                            & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & _NumActual & "</div>"
                         & "</div>"
                         & _Icono
                     & "</div>"
                     & "<div style='display:flex;gap:16px;border-top:1px solid #E8EAED;padding-top:8px'>"
                         & "<div style='flex:1'>"
                             & "<div style='" & _Label & "'>Año anterior (" & _Anio - 1 & ")</div>"
-                            & "<div style='" & _Valor & "'>" & FORMAT ( _AA, _Fmt ) & "</div>"
+                            & "<div style='" & _Valor & "'>" & _NumAA & "</div>"
                             & "<span style='" & _Pill & "color:" & _ColAA & ";background:" & _BgAA & "'>" & _PillAA & "</span>"
                         & "</div>"
                         & "<div style='flex:1'>"
                             & "<div style='" & _Label & "'>Último mes (" & _MesNom & " " & _Anio & ")</div>"
-                            & "<div style='" & _Valor & "'>" & FORMAT ( _Mes, _Fmt ) & "</div>"
+                            & "<div style='" & _Valor & "'>" & _NumMes & "</div>"
                             & "<span style='" & _Pill & "color:" & _ColMes & ";background:" & _BgMes & "'>" & _PillMes & "</span>"
                             & "<span style='" & _Label & ";margin-left:6px'>vs mes ant.</span>"
                         & "</div>"
@@ -311,14 +409,10 @@ DEFINE
         VAR _MesAnt    = [Margen Mes Anterior]
         // ---- Plantilla ----
         VAR _FechaFin = [KPI Fecha Fin]
-        VAR _Escala = COALESCE ( ABS ( _Mes ), ABS ( _Actual ) )
-        VAR _Fmt =
-            SWITCH (
-                TRUE (),
-                _Escala >= 1000000, "$#,0.0,,\M;-$#,0.0,,\M",
-                _Escala >= 1000, "$#,0.0,\K;-$#,0.0,\K",
-                "$#,0;-$#,0"
-            )
+        // Formato compacto: $175M, $8.9M, $950K
+        VAR _NumActual = VAR v = _Actual VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+        VAR _NumAA = VAR v = _AA VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
+        VAR _NumMes = VAR v = _Mes VAR a = ABS ( v ) RETURN IF ( ISBLANK ( v ), "s/d", IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (), a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B", a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M", a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M", a >= 100000, FORMAT ( a / 1000, "0" ) & "K", a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K", FORMAT ( a, "0" ) ) )
         VAR _VarAA  = DIVIDE ( _Actual - _AA, ABS ( _AA ) )
         VAR _VarMes = DIVIDE ( _Mes - _MesAnt, ABS ( _MesAnt ) )
         VAR _TxtAA  = FORMAT ( _VarAA, "+0.0%;-0.0%;0.0%" )
@@ -354,19 +448,19 @@ DEFINE
                     & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
                         & "<div>"
                             & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
-                            & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+                            & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & _NumActual & "</div>"
                         & "</div>"
                         & _Icono
                     & "</div>"
                     & "<div style='display:flex;gap:16px;border-top:1px solid #E8EAED;padding-top:8px'>"
                         & "<div style='flex:1'>"
                             & "<div style='" & _Label & "'>Año anterior (" & _Anio - 1 & ")</div>"
-                            & "<div style='" & _Valor & "'>" & FORMAT ( _AA, _Fmt ) & "</div>"
+                            & "<div style='" & _Valor & "'>" & _NumAA & "</div>"
                             & "<span style='" & _Pill & "color:" & _ColAA & ";background:" & _BgAA & "'>" & _PillAA & "</span>"
                         & "</div>"
                         & "<div style='flex:1'>"
                             & "<div style='" & _Label & "'>Último mes (" & _MesNom & " " & _Anio & ")</div>"
-                            & "<div style='" & _Valor & "'>" & FORMAT ( _Mes, _Fmt ) & "</div>"
+                            & "<div style='" & _Valor & "'>" & _NumMes & "</div>"
                             & "<span style='" & _Pill & "color:" & _ColMes & ";background:" & _BgMes & "'>" & _PillMes & "</span>"
                             & "<span style='" & _Label & ";margin-left:6px'>vs mes ant.</span>"
                         & "</div>"
