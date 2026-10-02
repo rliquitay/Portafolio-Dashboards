@@ -1,0 +1,432 @@
+// =====================================================================
+//  FuturoTecno - Tarjetas KPI en HTML (Ingresos, Gastos, Margen, Margen %)
+//  Cómo usarlo:
+//    1. Power BI Desktop > Vista de consultas DAX > pegar todo este script.
+//    2. Ejecutar (F5) para previsualizar los números por año.
+//    3. Clic en "Update model with changes" (arriba del DEFINE) para
+//       crear todas las medidas en la tabla Medidas.
+//    4. En el visual HTML, arrastrar [HTML KPI Ingresos] / [HTML KPI Gastos]
+//       / [HTML KPI Margen] / [HTML KPI Margen %] al campo de valores.
+//
+//  Lógica de períodos (respeta los filtros de País, Marca y Cliente):
+//    - Actual       = año seleccionado en el segmentador.
+//    - Año anterior = mismo período del año previo (si el año actual tiene
+//                     datos hasta junio, compara enero-junio vs enero-junio).
+//    - Último mes   = último mes con datos del período seleccionado,
+//                     comparado contra el mes inmediatamente anterior.
+//  Colores: Ingresos y Margen suben = verde; Gastos suben = rojo.
+//  Flechas: ▲ = variación favorable, ▼ = desfavorable (el % mantiene su signo).
+//  Margen %: tarjeta compacta, solo año actual y año anterior.
+//  Margen %: valor positivo = verde, negativo = rojo.
+// =====================================================================
+
+DEFINE
+
+    // ---------- Base ----------------------------------------------------
+
+    MEASURE Medidas[KPI Fecha Fin] =
+        // Última fecha con datos dentro del período seleccionado
+        // (ignora País/Marca/Cliente para que todas las tarjetas usen el mismo corte)
+        CALCULATE (
+            MAX ( FuturoTecno_2020_2022[Fecha] ),
+            REMOVEFILTERS ( FuturoTecno_2020_2022 )
+        )
+
+    // ---------- Ingresos ------------------------------------------------
+
+    MEASURE Medidas[Ingresos AA] =
+        VAR _Ini = MIN ( Calendario[Date] )
+        VAR _Fin = [KPI Fecha Fin]
+        RETURN
+            CALCULATE (
+                [01. Total Ingresos],
+                REMOVEFILTERS ( Calendario ),
+                Calendario[Date] >= EDATE ( _Ini, -12 )
+                    && Calendario[Date] <= EDATE ( _Fin, -12 )
+            )
+
+    MEASURE Medidas[Ingresos Último Mes] =
+        VAR _Fin = [KPI Fecha Fin]
+        RETURN
+            CALCULATE (
+                [01. Total Ingresos],
+                REMOVEFILTERS ( Calendario ),
+                Calendario[Date] > EOMONTH ( _Fin, -1 )
+                    && Calendario[Date] <= EOMONTH ( _Fin, 0 )
+            )
+
+    MEASURE Medidas[Ingresos Mes Anterior] =
+        VAR _Fin = [KPI Fecha Fin]
+        RETURN
+            CALCULATE (
+                [01. Total Ingresos],
+                REMOVEFILTERS ( Calendario ),
+                Calendario[Date] > EOMONTH ( _Fin, -2 )
+                    && Calendario[Date] <= EOMONTH ( _Fin, -1 )
+            )
+
+    MEASURE Medidas[Ingresos % Var AA] =
+        DIVIDE ( [01. Total Ingresos] - [Ingresos AA], ABS ( [Ingresos AA] ) )
+
+    MEASURE Medidas[Ingresos % Var Mes] =
+        DIVIDE ( [Ingresos Último Mes] - [Ingresos Mes Anterior], ABS ( [Ingresos Mes Anterior] ) )
+
+    // ---------- Gastos --------------------------------------------------
+
+    MEASURE Medidas[Gastos AA] =
+        VAR _Ini = MIN ( Calendario[Date] )
+        VAR _Fin = [KPI Fecha Fin]
+        RETURN
+            CALCULATE (
+                [02. Total Gastos],
+                REMOVEFILTERS ( Calendario ),
+                Calendario[Date] >= EDATE ( _Ini, -12 )
+                    && Calendario[Date] <= EDATE ( _Fin, -12 )
+            )
+
+    MEASURE Medidas[Gastos Último Mes] =
+        VAR _Fin = [KPI Fecha Fin]
+        RETURN
+            CALCULATE (
+                [02. Total Gastos],
+                REMOVEFILTERS ( Calendario ),
+                Calendario[Date] > EOMONTH ( _Fin, -1 )
+                    && Calendario[Date] <= EOMONTH ( _Fin, 0 )
+            )
+
+    MEASURE Medidas[Gastos Mes Anterior] =
+        VAR _Fin = [KPI Fecha Fin]
+        RETURN
+            CALCULATE (
+                [02. Total Gastos],
+                REMOVEFILTERS ( Calendario ),
+                Calendario[Date] > EOMONTH ( _Fin, -2 )
+                    && Calendario[Date] <= EOMONTH ( _Fin, -1 )
+            )
+
+    MEASURE Medidas[Gastos % Var AA] =
+        DIVIDE ( [02. Total Gastos] - [Gastos AA], ABS ( [Gastos AA] ) )
+
+    MEASURE Medidas[Gastos % Var Mes] =
+        DIVIDE ( [Gastos Último Mes] - [Gastos Mes Anterior], ABS ( [Gastos Mes Anterior] ) )
+
+    // ---------- Margen (Ingresos - Gastos) ------------------------------
+
+    MEASURE Medidas[Margen AA] = [Ingresos AA] - [Gastos AA]
+
+    MEASURE Medidas[Margen Último Mes] = [Ingresos Último Mes] - [Gastos Último Mes]
+
+    MEASURE Medidas[Margen Mes Anterior] = [Ingresos Mes Anterior] - [Gastos Mes Anterior]
+
+    // ABS en el denominador: si el margen anterior fue negativo, el signo
+    // de la variación sigue indicando mejora (+) o empeoramiento (-)
+    MEASURE Medidas[Margen % Var AA] =
+        DIVIDE ( [03. Total Beneficio] - [Margen AA], ABS ( [Margen AA] ) )
+
+    MEASURE Medidas[Margen % Var Mes] =
+        DIVIDE ( [Margen Último Mes] - [Margen Mes Anterior], ABS ( [Margen Mes Anterior] ) )
+
+    // ---------- Margen % (Margen / Ingresos) ----------------------------
+
+    MEASURE Medidas[Margen Pct AA] = DIVIDE ( [Margen AA], [Ingresos AA] )
+
+    MEASURE Medidas[Margen Pct Último Mes] = DIVIDE ( [Margen Último Mes], [Ingresos Último Mes] )
+
+    MEASURE Medidas[Margen Pct Mes Anterior] = DIVIDE ( [Margen Mes Anterior], [Ingresos Mes Anterior] )
+
+    // Variaciones en puntos porcentuales (0.012 = +1.2 p.p.)
+    MEASURE Medidas[Margen Pct Var AA (pp)] =
+        IF (
+            NOT ISBLANK ( [04. Margen] ) && NOT ISBLANK ( [Margen Pct AA] ),
+            [04. Margen] - [Margen Pct AA]
+        )
+
+    MEASURE Medidas[Margen Pct Var Mes (pp)] =
+        IF (
+            NOT ISBLANK ( [Margen Pct Último Mes] ) && NOT ISBLANK ( [Margen Pct Mes Anterior] ),
+            [Margen Pct Último Mes] - [Margen Pct Mes Anterior]
+        )
+
+    // ---------- Tarjetas HTML -------------------------------------------
+    // Las 4 tarjetas usan la misma plantilla: solo cambia el bloque
+    // "Parámetros". _Sentido = 1 si subir es bueno, -1 si subir es malo.
+    // _IconoSvg = dibujo del ícono (SVG 24x24) que va arriba a la derecha.
+
+    MEASURE Medidas[HTML KPI Ingresos] =
+        // ---- Parámetros ----
+        VAR _Titulo    = "Ingresos"
+        VAR _Sentido   = 1
+        VAR _IconoSvg  = "<rect x='2' y='6' width='20' height='12' rx='2'/><circle cx='12' cy='12' r='2'/><path d='M6 12h.01M18 12h.01'/>"
+        VAR _Actual    = [01. Total Ingresos]
+        VAR _AA        = [Ingresos AA]
+        VAR _Mes       = [Ingresos Último Mes]
+        VAR _MesAnt    = [Ingresos Mes Anterior]
+        // ---- Plantilla ----
+        VAR _FechaFin = [KPI Fecha Fin]
+        VAR _Escala = COALESCE ( ABS ( _Mes ), ABS ( _Actual ) )
+        VAR _Fmt =
+            SWITCH (
+                TRUE (),
+                _Escala >= 1000000, "$#,0.0,,\M;-$#,0.0,,\M",
+                _Escala >= 1000, "$#,0.0,\K;-$#,0.0,\K",
+                "$#,0;-$#,0"
+            )
+        VAR _VarAA  = DIVIDE ( _Actual - _AA, ABS ( _AA ) )
+        VAR _VarMes = DIVIDE ( _Mes - _MesAnt, ABS ( _MesAnt ) )
+        VAR _TxtAA  = FORMAT ( _VarAA, "+0.0%;-0.0%;0.0%" )
+        VAR _TxtMes = FORMAT ( _VarMes, "+0.0%;-0.0%;0.0%" )
+        VAR _Verde = "#1E8E3E"  VAR _VerdeBg = "#E6F4EA"
+        VAR _Rojo  = "#D93025"  VAR _RojoBg  = "#FCE8E6"
+        VAR _Gris  = "#80868B"  VAR _GrisBg  = "#F1F3F4"
+        VAR _ColAA   = SWITCH ( TRUE (), ISBLANK ( _VarAA ), _Gris, _VarAA * _Sentido >= 0, _Verde, _Rojo )
+        VAR _BgAA    = SWITCH ( TRUE (), ISBLANK ( _VarAA ), _GrisBg, _VarAA * _Sentido >= 0, _VerdeBg, _RojoBg )
+        VAR _ColMes  = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _Gris, _VarMes * _Sentido >= 0, _Verde, _Rojo )
+        VAR _BgMes   = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _GrisBg, _VarMes * _Sentido >= 0, _VerdeBg, _RojoBg )
+        // Color principal según la variación contra el año anterior
+        VAR _ColPrincipal = _ColAA
+        VAR _ColValor     = "#202124"
+        VAR _PillAA  = IF ( ISBLANK ( _VarAA ), "s/d", IF ( _VarAA * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtAA )
+        VAR _PillMes = IF ( ISBLANK ( _VarMes ), "s/d", IF ( _VarMes * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtMes )
+        VAR _Anio = YEAR ( _FechaFin )
+        VAR _MesNom =
+            SWITCH ( MONTH ( _FechaFin ),
+                1, "Ene", 2, "Feb", 3, "Mar", 4, "Abr", 5, "May", 6, "Jun",
+                7, "Jul", 8, "Ago", 9, "Sep", 10, "Oct", 11, "Nov", 12, "Dic" )
+        VAR _Label = "font-size:11px;color:#80868B"
+        VAR _Valor = "font-size:16px;font-weight:600;color:#3C4043;margin-top:1px"
+        VAR _Pill  = "display:inline-block;margin-top:4px;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:600;"
+        VAR _Icono =
+            "<div style='flex:0 0 50px;width:50px;height:50px;border-radius:50%;background:#E8F1F1;display:flex;align-items:center;justify-content:center'>"
+                & "<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='#499195' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'>" & _IconoSvg & "</svg></div>"
+        RETURN
+            IF (
+                ISBLANK ( _Actual ),
+                "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:14px 18px;background:#FFFFFF;border-radius:12px;border-left:6px solid " & _ColPrincipal & ";box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                    & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
+                        & "<div>"
+                            & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
+                            & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+                        & "</div>"
+                        & _Icono
+                    & "</div>"
+                    & "<div style='display:flex;gap:16px;border-top:1px solid #E8EAED;padding-top:8px'>"
+                        & "<div style='flex:1'>"
+                            & "<div style='" & _Label & "'>Año anterior (" & _Anio - 1 & ")</div>"
+                            & "<div style='" & _Valor & "'>" & FORMAT ( _AA, _Fmt ) & "</div>"
+                            & "<span style='" & _Pill & "color:" & _ColAA & ";background:" & _BgAA & "'>" & _PillAA & "</span>"
+                        & "</div>"
+                        & "<div style='flex:1'>"
+                            & "<div style='" & _Label & "'>Último mes (" & _MesNom & " " & _Anio & ")</div>"
+                            & "<div style='" & _Valor & "'>" & FORMAT ( _Mes, _Fmt ) & "</div>"
+                            & "<span style='" & _Pill & "color:" & _ColMes & ";background:" & _BgMes & "'>" & _PillMes & "</span>"
+                            & "<span style='" & _Label & ";margin-left:6px'>vs mes ant.</span>"
+                        & "</div>"
+                    & "</div>"
+                & "</div>"
+            )
+
+    MEASURE Medidas[HTML KPI Gastos] =
+        // ---- Parámetros ----
+        VAR _Titulo    = "Gastos"
+        VAR _Sentido   = -1
+        VAR _IconoSvg  = "<rect x='2' y='5' width='20' height='14' rx='2'/><line x1='2' y1='10' x2='22' y2='10'/><line x1='6' y1='15' x2='10' y2='15'/>"
+        VAR _Actual    = [02. Total Gastos]
+        VAR _AA        = [Gastos AA]
+        VAR _Mes       = [Gastos Último Mes]
+        VAR _MesAnt    = [Gastos Mes Anterior]
+        // ---- Plantilla ----
+        VAR _FechaFin = [KPI Fecha Fin]
+        VAR _Escala = COALESCE ( ABS ( _Mes ), ABS ( _Actual ) )
+        VAR _Fmt =
+            SWITCH (
+                TRUE (),
+                _Escala >= 1000000, "$#,0.0,,\M;-$#,0.0,,\M",
+                _Escala >= 1000, "$#,0.0,\K;-$#,0.0,\K",
+                "$#,0;-$#,0"
+            )
+        VAR _VarAA  = DIVIDE ( _Actual - _AA, ABS ( _AA ) )
+        VAR _VarMes = DIVIDE ( _Mes - _MesAnt, ABS ( _MesAnt ) )
+        VAR _TxtAA  = FORMAT ( _VarAA, "+0.0%;-0.0%;0.0%" )
+        VAR _TxtMes = FORMAT ( _VarMes, "+0.0%;-0.0%;0.0%" )
+        VAR _Verde = "#1E8E3E"  VAR _VerdeBg = "#E6F4EA"
+        VAR _Rojo  = "#D93025"  VAR _RojoBg  = "#FCE8E6"
+        VAR _Gris  = "#80868B"  VAR _GrisBg  = "#F1F3F4"
+        VAR _ColAA   = SWITCH ( TRUE (), ISBLANK ( _VarAA ), _Gris, _VarAA * _Sentido >= 0, _Verde, _Rojo )
+        VAR _BgAA    = SWITCH ( TRUE (), ISBLANK ( _VarAA ), _GrisBg, _VarAA * _Sentido >= 0, _VerdeBg, _RojoBg )
+        VAR _ColMes  = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _Gris, _VarMes * _Sentido >= 0, _Verde, _Rojo )
+        VAR _BgMes   = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _GrisBg, _VarMes * _Sentido >= 0, _VerdeBg, _RojoBg )
+        // Color principal según la variación contra el año anterior
+        VAR _ColPrincipal = _ColAA
+        VAR _ColValor     = "#202124"
+        VAR _PillAA  = IF ( ISBLANK ( _VarAA ), "s/d", IF ( _VarAA * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtAA )
+        VAR _PillMes = IF ( ISBLANK ( _VarMes ), "s/d", IF ( _VarMes * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtMes )
+        VAR _Anio = YEAR ( _FechaFin )
+        VAR _MesNom =
+            SWITCH ( MONTH ( _FechaFin ),
+                1, "Ene", 2, "Feb", 3, "Mar", 4, "Abr", 5, "May", 6, "Jun",
+                7, "Jul", 8, "Ago", 9, "Sep", 10, "Oct", 11, "Nov", 12, "Dic" )
+        VAR _Label = "font-size:11px;color:#80868B"
+        VAR _Valor = "font-size:16px;font-weight:600;color:#3C4043;margin-top:1px"
+        VAR _Pill  = "display:inline-block;margin-top:4px;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:600;"
+        VAR _Icono =
+            "<div style='flex:0 0 50px;width:50px;height:50px;border-radius:50%;background:#E8F1F1;display:flex;align-items:center;justify-content:center'>"
+                & "<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='#499195' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'>" & _IconoSvg & "</svg></div>"
+        RETURN
+            IF (
+                ISBLANK ( _Actual ),
+                "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:14px 18px;background:#FFFFFF;border-radius:12px;border-left:6px solid " & _ColPrincipal & ";box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                    & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
+                        & "<div>"
+                            & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
+                            & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+                        & "</div>"
+                        & _Icono
+                    & "</div>"
+                    & "<div style='display:flex;gap:16px;border-top:1px solid #E8EAED;padding-top:8px'>"
+                        & "<div style='flex:1'>"
+                            & "<div style='" & _Label & "'>Año anterior (" & _Anio - 1 & ")</div>"
+                            & "<div style='" & _Valor & "'>" & FORMAT ( _AA, _Fmt ) & "</div>"
+                            & "<span style='" & _Pill & "color:" & _ColAA & ";background:" & _BgAA & "'>" & _PillAA & "</span>"
+                        & "</div>"
+                        & "<div style='flex:1'>"
+                            & "<div style='" & _Label & "'>Último mes (" & _MesNom & " " & _Anio & ")</div>"
+                            & "<div style='" & _Valor & "'>" & FORMAT ( _Mes, _Fmt ) & "</div>"
+                            & "<span style='" & _Pill & "color:" & _ColMes & ";background:" & _BgMes & "'>" & _PillMes & "</span>"
+                            & "<span style='" & _Label & ";margin-left:6px'>vs mes ant.</span>"
+                        & "</div>"
+                    & "</div>"
+                & "</div>"
+            )
+
+    MEASURE Medidas[HTML KPI Margen] =
+        // ---- Parámetros ----
+        VAR _Titulo    = "Margen"
+        VAR _Sentido   = 1
+        VAR _IconoSvg  = "<path d='M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z'/><path d='M2 9v1c0 1.1.9 2 2 2h1'/><path d='M16 11h.01'/>"
+        VAR _Actual    = [03. Total Beneficio]
+        VAR _AA        = [Margen AA]
+        VAR _Mes       = [Margen Último Mes]
+        VAR _MesAnt    = [Margen Mes Anterior]
+        // ---- Plantilla ----
+        VAR _FechaFin = [KPI Fecha Fin]
+        VAR _Escala = COALESCE ( ABS ( _Mes ), ABS ( _Actual ) )
+        VAR _Fmt =
+            SWITCH (
+                TRUE (),
+                _Escala >= 1000000, "$#,0.0,,\M;-$#,0.0,,\M",
+                _Escala >= 1000, "$#,0.0,\K;-$#,0.0,\K",
+                "$#,0;-$#,0"
+            )
+        VAR _VarAA  = DIVIDE ( _Actual - _AA, ABS ( _AA ) )
+        VAR _VarMes = DIVIDE ( _Mes - _MesAnt, ABS ( _MesAnt ) )
+        VAR _TxtAA  = FORMAT ( _VarAA, "+0.0%;-0.0%;0.0%" )
+        VAR _TxtMes = FORMAT ( _VarMes, "+0.0%;-0.0%;0.0%" )
+        VAR _Verde = "#1E8E3E"  VAR _VerdeBg = "#E6F4EA"
+        VAR _Rojo  = "#D93025"  VAR _RojoBg  = "#FCE8E6"
+        VAR _Gris  = "#80868B"  VAR _GrisBg  = "#F1F3F4"
+        VAR _ColAA   = SWITCH ( TRUE (), ISBLANK ( _VarAA ), _Gris, _VarAA * _Sentido >= 0, _Verde, _Rojo )
+        VAR _BgAA    = SWITCH ( TRUE (), ISBLANK ( _VarAA ), _GrisBg, _VarAA * _Sentido >= 0, _VerdeBg, _RojoBg )
+        VAR _ColMes  = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _Gris, _VarMes * _Sentido >= 0, _Verde, _Rojo )
+        VAR _BgMes   = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _GrisBg, _VarMes * _Sentido >= 0, _VerdeBg, _RojoBg )
+        // Color principal según la variación contra el año anterior
+        VAR _ColPrincipal = _ColAA
+        VAR _ColValor     = "#202124"
+        VAR _PillAA  = IF ( ISBLANK ( _VarAA ), "s/d", IF ( _VarAA * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtAA )
+        VAR _PillMes = IF ( ISBLANK ( _VarMes ), "s/d", IF ( _VarMes * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtMes )
+        VAR _Anio = YEAR ( _FechaFin )
+        VAR _MesNom =
+            SWITCH ( MONTH ( _FechaFin ),
+                1, "Ene", 2, "Feb", 3, "Mar", 4, "Abr", 5, "May", 6, "Jun",
+                7, "Jul", 8, "Ago", 9, "Sep", 10, "Oct", 11, "Nov", 12, "Dic" )
+        VAR _Label = "font-size:11px;color:#80868B"
+        VAR _Valor = "font-size:16px;font-weight:600;color:#3C4043;margin-top:1px"
+        VAR _Pill  = "display:inline-block;margin-top:4px;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:600;"
+        VAR _Icono =
+            "<div style='flex:0 0 50px;width:50px;height:50px;border-radius:50%;background:#E8F1F1;display:flex;align-items:center;justify-content:center'>"
+                & "<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='#499195' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'>" & _IconoSvg & "</svg></div>"
+        RETURN
+            IF (
+                ISBLANK ( _Actual ),
+                "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:14px 18px;background:#FFFFFF;border-radius:12px;border-left:6px solid " & _ColPrincipal & ";box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                    & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
+                        & "<div>"
+                            & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
+                            & "<div style='font-size:30px;font-weight:700;color:" & _ColValor & ";line-height:1.2;margin-top:4px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+                        & "</div>"
+                        & _Icono
+                    & "</div>"
+                    & "<div style='display:flex;gap:16px;border-top:1px solid #E8EAED;padding-top:8px'>"
+                        & "<div style='flex:1'>"
+                            & "<div style='" & _Label & "'>Año anterior (" & _Anio - 1 & ")</div>"
+                            & "<div style='" & _Valor & "'>" & FORMAT ( _AA, _Fmt ) & "</div>"
+                            & "<span style='" & _Pill & "color:" & _ColAA & ";background:" & _BgAA & "'>" & _PillAA & "</span>"
+                        & "</div>"
+                        & "<div style='flex:1'>"
+                            & "<div style='" & _Label & "'>Último mes (" & _MesNom & " " & _Anio & ")</div>"
+                            & "<div style='" & _Valor & "'>" & FORMAT ( _Mes, _Fmt ) & "</div>"
+                            & "<span style='" & _Pill & "color:" & _ColMes & ";background:" & _BgMes & "'>" & _PillMes & "</span>"
+                            & "<span style='" & _Label & ";margin-left:6px'>vs mes ant.</span>"
+                        & "</div>"
+                    & "</div>"
+                & "</div>"
+            )
+
+    MEASURE Medidas[HTML KPI Margen %] =
+        // Tarjeta compacta: 1 columna, 2 filas (año actual protagonista, año anterior chico)
+        // Verde si el margen es positivo, rojo si es negativo
+        VAR _IconoSvg = "<line x1='19' y1='5' x2='5' y2='19'/><circle cx='6.5' cy='6.5' r='2.5'/><circle cx='17.5' cy='17.5' r='2.5'/>"
+        VAR _Actual   = [04. Margen]
+        VAR _AA       = [Margen Pct AA]
+        VAR _Anio     = YEAR ( [KPI Fecha Fin] )
+        VAR _Fmt      = "0.0%;-0.0%;0.0%"
+        VAR _ColAct   = IF ( _Actual >= 0, "#1E8E3E", "#D93025" )
+        VAR _ColAA    = SWITCH ( TRUE (), ISBLANK ( _AA ), "#80868B", _AA >= 0, "#1E8E3E", "#D93025" )
+        VAR _Icono =
+            "<div style='flex:0 0 50px;width:50px;height:50px;border-radius:50%;background:#E8F1F1;display:flex;align-items:center;justify-content:center'>"
+                & "<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='#499195' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'>" & _IconoSvg & "</svg></div>"
+        RETURN
+            IF (
+                ISBLANK ( _Actual ),
+                "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>Margen %: sin datos</div>",
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;padding:12px 16px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                    // Fila 1: margen del año + ícono arriba a la derecha
+                    & "<div style='display:flex;justify-content:space-between;align-items:flex-start;gap:12px'>"
+                        & "<div>"
+                            & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>Margen % " & _Anio & "</div>"
+                            & "<div style='font-size:34px;font-weight:700;color:" & _ColAct & ";line-height:1.15;margin-top:2px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+                        & "</div>"
+                        & _Icono
+                    & "</div>"
+                    // Fila 2: año anterior, más chico
+                    & "<div style='margin-top:6px;padding-top:6px;border-top:1px solid #E8EAED;font-size:12px;color:#80868B'>"
+                        & "Año anterior (" & _Anio - 1 & "): "
+                        & "<span style='font-weight:600;color:" & _ColAA & "'>" & IF ( ISBLANK ( _AA ), "s/d", FORMAT ( _AA, _Fmt ) ) & "</span>"
+                    & "</div>"
+                & "</div>"
+            )
+
+// ---------- Previsualización por año (para validar los números) ----------
+EVALUATE
+ADDCOLUMNS (
+    SELECTCOLUMNS ( { 2021, 2022 }, "Año", [Value] ),
+    "Fecha Fin",             CALCULATE ( [KPI Fecha Fin], YEAR ( Calendario[Date] ) = [Año] ),
+    "Ingresos",              CALCULATE ( [01. Total Ingresos], YEAR ( Calendario[Date] ) = [Año] ),
+    "Ingresos AA",           CALCULATE ( [Ingresos AA], YEAR ( Calendario[Date] ) = [Año] ),
+    "Ingresos % AA",         CALCULATE ( [Ingresos % Var AA], YEAR ( Calendario[Date] ) = [Año] ),
+    "Ingresos Ult Mes",      CALCULATE ( [Ingresos Último Mes], YEAR ( Calendario[Date] ) = [Año] ),
+    "Ingresos % Mes",        CALCULATE ( [Ingresos % Var Mes], YEAR ( Calendario[Date] ) = [Año] ),
+    "Gastos",                CALCULATE ( [02. Total Gastos], YEAR ( Calendario[Date] ) = [Año] ),
+    "Gastos % AA",           CALCULATE ( [Gastos % Var AA], YEAR ( Calendario[Date] ) = [Año] ),
+    "Gastos % Mes",          CALCULATE ( [Gastos % Var Mes], YEAR ( Calendario[Date] ) = [Año] ),
+    "Margen",                CALCULATE ( [03. Total Beneficio], YEAR ( Calendario[Date] ) = [Año] ),
+    "Margen % AA",           CALCULATE ( [Margen % Var AA], YEAR ( Calendario[Date] ) = [Año] ),
+    "Margen % Mes",          CALCULATE ( [Margen % Var Mes], YEAR ( Calendario[Date] ) = [Año] ),
+    "Margen Pct",            CALCULATE ( [04. Margen], YEAR ( Calendario[Date] ) = [Año] ),
+    "Margen Pct AA",         CALCULATE ( [Margen Pct AA], YEAR ( Calendario[Date] ) = [Año] ),
+    "Margen Pct Var AA pp",  CALCULATE ( [Margen Pct Var AA (pp)], YEAR ( Calendario[Date] ) = [Año] ),
+    "Margen Pct Ult Mes",    CALCULATE ( [Margen Pct Último Mes], YEAR ( Calendario[Date] ) = [Año] ),
+    "Margen Pct Var Mes pp", CALCULATE ( [Margen Pct Var Mes (pp)], YEAR ( Calendario[Date] ) = [Año] )
+)

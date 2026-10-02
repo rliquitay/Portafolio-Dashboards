@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Reporte_Financiero FuturoTecno"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c7f07b00-46bf-4e58-891f-fb6791b7f610"
+  }
+}

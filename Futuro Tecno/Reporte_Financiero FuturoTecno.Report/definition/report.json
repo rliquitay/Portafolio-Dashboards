@@ -1,0 +1,123 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY24SU02",
+      "reportVersionAtImport": {
+        "visual": "1.8.88",
+        "report": "2.0.88",
+        "page": "1.3.88"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "Highrise4651555207824094.json",
+      "reportVersionAtImport": {
+        "visual": "1.8.88",
+        "report": "2.0.88",
+        "page": "1.3.88"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "publicCustomVisuals": [
+    "htmlContent443BE3AD55E043BF878BED274D3A6855"
+  ],
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY24SU02",
+          "path": "BaseThemes/CY24SU02.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "ahorrar-dinero007589393039330039.png",
+          "path": "ahorrar-dinero007589393039330039.png",
+          "type": "Image"
+        },
+        {
+          "name": "ahorrar-dinero256258944174075.png",
+          "path": "ahorrar-dinero256258944174075.png",
+          "type": "Image"
+        },
+        {
+          "name": "Diapositiva138803797574259735.PNG",
+          "path": "Diapositiva138803797574259735.PNG",
+          "type": "Image"
+        },
+        {
+          "name": "gasto962856555726904.png",
+          "path": "gasto962856555726904.png",
+          "type": "Image"
+        },
+        {
+          "name": "Highrise4651555207824094.json",
+          "path": "Highrise4651555207824094.json",
+          "type": "CustomTheme"
+        },
+        {
+          "name": "Logo9511619037299386.png",
+          "path": "Logo9511619037299386.png",
+          "type": "Image"
+        },
+        {
+          "name": "privilegio05348709237961069.png",
+          "path": "privilegio05348709237961069.png",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  },
+  "slowDataSourceSettings": {
+    "isCrossHighlightingDisabled": false,
+    "isSlicerSelectionsButtonEnabled": false,
+    "isFilterSelectionsButtonEnabled": false,
+    "isFieldWellButtonEnabled": false,
+    "isApplyAllButtonEnabled": false
+  }
+}

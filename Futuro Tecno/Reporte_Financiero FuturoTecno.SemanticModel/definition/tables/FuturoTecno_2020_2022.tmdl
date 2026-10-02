@@ -1,0 +1,72 @@
+table FuturoTecno_2020_2022
+	lineageTag: b413bbe1-d7fc-493a-a1ee-da1a7db50ca6
+
+	column Fecha
+		dataType: dateTime
+		formatString: d/m/yyyy
+		lineageTag: 99c74142-839f-476b-9894-a5a7a34e6399
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column País
+		dataType: string
+		lineageTag: 71551235-6c4c-49f1-8154-a311ce7b29f0
+		summarizeBy: none
+		sourceColumn: País
+
+		annotation SummarizationSetBy = Automatic
+
+	column Marca
+		dataType: string
+		lineageTag: 9889ea5a-3ba0-4371-b4e3-cd39b1a598ea
+		summarizeBy: none
+		sourceColumn: Marca
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cliente
+		dataType: string
+		lineageTag: 985d4c9c-6c41-4eb5-b6b4-415f2fd389a4
+		summarizeBy: none
+		sourceColumn: Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ingresos
+		dataType: double
+		lineageTag: e8582ffe-b172-4751-a3ee-c84e2f095b83
+		summarizeBy: sum
+		sourceColumn: Ingresos
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Gastos
+		dataType: double
+		lineageTag: 3233a3a6-ab1e-48e4-bdc5-4bc6d2c30218
+		summarizeBy: sum
+		sourceColumn: Gastos
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition FuturoTecno_2020_2022 = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("H:\Mi unidad\Proyectos Personales\power_bi\01-04-24 Datdata El curso más actualizado de Power BI (Proyecto completo)\Registros FuturoTecno.xlsx"), null, true),
+				    FuturoTecno_2020_2022_Table = Source{[Item="FuturoTecno_2020_2022",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(FuturoTecno_2020_2022_Table,{{"Ingresos", type number}, {"Gastos", type number}, {"Fecha", type date}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

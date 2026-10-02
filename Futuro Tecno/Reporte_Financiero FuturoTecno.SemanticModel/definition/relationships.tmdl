@@ -1,0 +1,9 @@
+relationship c5966309-29d7-4764-bdf9-f91e3a76c0de
+	fromColumn: FuturoTecno_2020_2022.Fecha
+	toColumn: Calendario.Date
+
+relationship ab8cd3f8-5ecf-4eab-805c-92006302095d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Calendario.Date
+	toColumn: LocalDateTable_8849d393-dacd-43ce-a677-196fc895ac2a.Date
+
