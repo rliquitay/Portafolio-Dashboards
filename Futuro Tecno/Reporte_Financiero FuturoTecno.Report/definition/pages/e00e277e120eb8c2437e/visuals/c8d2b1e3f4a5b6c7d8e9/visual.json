@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
-  "name": "22cdd59862cabc3908bd",
+  "name": "c8d2b1e3f4a5b6c7d8e9",
   "position": {
-    "x": 264.2104987563817,
-    "y": 190.61762010734387,
-    "z": 10000,
-    "height": 168.90168870270978,
-    "width": 464.47964393245184,
-    "tabOrder": 10000
+    "x": 580,
+    "y": 215,
+    "z": 590,
+    "height": 230,
+    "width": 340,
+    "tabOrder": 590
   },
   "visual": {
     "visualType": "tableEx",
@@ -23,11 +23,11 @@
                       "Entity": "FuturoTecno_2020_2022"
                     }
                   },
-                  "Property": "País"
+                  "Property": "Marca"
                 }
               },
-              "queryRef": "FuturoTecno_2020_2022.País",
-              "nativeQueryRef": "País"
+              "queryRef": "FuturoTecno_2020_2022.Marca",
+              "nativeQueryRef": "Marca"
             },
             {
               "field": {
@@ -52,12 +52,27 @@
                       "Entity": "Medidas"
                     }
                   },
+                  "Property": "17. Beneficio s/ Ventas Totales"
+                }
+              },
+              "queryRef": "Medidas.17. Beneficio s/ Ventas Totales",
+              "nativeQueryRef": "% s/ Ventas",
+              "displayName": "% s/ Ventas"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
                   "Property": "04. Margen"
                 }
               },
               "queryRef": "Medidas.04. Margen",
-              "nativeQueryRef": "Margen",
-              "displayName": "Margen"
+              "nativeQueryRef": "Margen %",
+              "displayName": "Margen %"
             }
           ]
         }
@@ -142,7 +157,7 @@
             }
           },
           "selector": {
-            "metadata": "Medidas.03. Total Beneficio"
+            "metadata": "Medidas.17. Beneficio s/ Ventas Totales"
           }
         }
       ],
@@ -349,36 +364,6 @@
             }
           }
         }
-      ],
-      "columnWidth": [
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "198.3216045979841D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "FuturoTecno_2020_2022.País"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "167.02678364260464D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "Medidas.03. Total Beneficio"
-          }
-        }
       ]
     },
     "visualContainerObjects": {
@@ -398,10 +383,31 @@
       "title": [
         {
           "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'tabla_pais'"
+                  "Value": "'Beneficio por Marca'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }

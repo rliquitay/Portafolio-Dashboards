@@ -20,24 +20,20 @@ table Medidas
 		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
 
 	measure '04. Margen' = DIVIDE([03. Total Beneficio],[01. Total Ingresos],0)
-		formatString: 0.000\ %;-0.000\ %;0.000\ %
+		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: 9f0dcf49-3a38-46f3-bb92-dd01f849eecc
 
-	measure '06. Last Year Ingresos' = ```
-			[Ingresos AA]
-			```
+	measure '06. Last Year Ingresos' = [Ingresos AA]
 		lineageTag: 07f66742-b754-4873-aba3-24682dde669b
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure '05. Last Month Ingresos' = ```
-			[Ingresos Último Mes]
-			```
+	measure '05. Last Month Ingresos' = [Ingresos Último Mes]
 		lineageTag: b77c7150-47e4-4e8f-a01a-dbdefdad617b
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure '07. % MoM Ingresos' = ```
+	measure '07. % MoM Ingresos' =
 			VAR __v = [Ingresos % Var Mes]
 			RETURN
 			    IF (
@@ -45,24 +41,21 @@ table Medidas
 			        BLANK (),
 			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
 			    )
-			```
 		lineageTag: 7e6c95c3-c131-443b-835b-410bb20babdb
 
-	measure '07. Color MoM Ingresos' = ```
+	measure '07. Color MoM Ingresos' =
 			VAR __v = [Ingresos % Var Mes]
 			RETURN
 			    IF ( __v * 1 < 0, "Red", "Green" )
-			```
 		lineageTag: e90afc79-1d14-4010-842f-d4548f764dc3
 
-	measure '08. Color YoY Ingresos' = ```
+	measure '08. Color YoY Ingresos' =
 			VAR __v = [Ingresos % Var AA]
 			RETURN
 			    IF ( __v * 1 < 0, "Red", "Green" )
-			```
 		lineageTag: dc83b5d2-8f10-426c-801b-0618ad5a576d
 
-	measure '08. % YoY Ingresos' = ```
+	measure '08. % YoY Ingresos' =
 			VAR __v = [Ingresos % Var AA]
 			RETURN
 			    IF (
@@ -70,24 +63,19 @@ table Medidas
 			        BLANK (),
 			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
 			    )
-			```
 		lineageTag: 9a9ba909-a56d-462a-9068-7afc00d92466
 
-	measure '09. Last Month Gastos' = ```
-			[Gastos Último Mes]
-			```
+	measure '09. Last Month Gastos' = [Gastos Último Mes]
 		lineageTag: ec5326a4-c0a5-451e-a41a-b0ff6e7eb674
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure '10. Last Year Gastos' = ```
-			[Gastos AA]
-			```
+	measure '10. Last Year Gastos' = [Gastos AA]
 		lineageTag: 516d1e5b-be6c-47ca-9b8e-c9e6816b1898
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure '11. % MoM Gastos' = ```
+	measure '11. % MoM Gastos' =
 			VAR __v = [Gastos % Var Mes]
 			RETURN
 			    IF (
@@ -95,17 +83,15 @@ table Medidas
 			        BLANK (),
 			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * -1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
 			    )
-			```
 		lineageTag: f9518abb-caee-49f5-81eb-878000f4d30f
 
-	measure '11. Color MoM Gastos' = ```
+	measure '11. Color MoM Gastos' =
 			VAR __v = [Gastos % Var Mes]
 			RETURN
 			    IF ( __v * -1 < 0, "Red", "Green" )
-			```
 		lineageTag: 810c5f0c-f1b4-4f8c-80a6-b57bc125b7f2
 
-	measure '12. % YoY Gastos' = ```
+	measure '12. % YoY Gastos' =
 			VAR __v = [Gastos % Var AA]
 			RETURN
 			    IF (
@@ -113,31 +99,25 @@ table Medidas
 			        BLANK (),
 			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * -1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
 			    )
-			```
 		lineageTag: 5f782431-566d-4007-a698-fd06c121b3b0
 
-	measure '12. Color YoY Gastos' = ```
+	measure '12. Color YoY Gastos' =
 			VAR __v = [Gastos % Var AA]
 			RETURN
 			    IF ( __v * -1 < 0, "Red", "Green" )
-			```
 		lineageTag: c8be8811-d5db-4953-8f07-ef2f2d8c1703
 
-	measure '13. Last Month Beneficios' = ```
-			[Margen Último Mes]
-			```
+	measure '13. Last Month Beneficios' = [Margen Último Mes]
 		lineageTag: 97539e38-21d7-44e9-a5f0-40d7ac6210ea
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure '14. Last Year Beneficios' = ```
-			[Margen AA]
-			```
+	measure '14. Last Year Beneficios' = [Margen AA]
 		lineageTag: 7e01fc69-3db6-4105-983e-a1ffe295a1a2
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure '15. % MoM Beneficios' = ```
+	measure '15. % MoM Beneficios' =
 			VAR __v = [Margen % Var Mes]
 			RETURN
 			    IF (
@@ -145,17 +125,15 @@ table Medidas
 			        BLANK (),
 			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
 			    )
-			```
 		lineageTag: a75ed406-d734-40c5-b150-0053b1647e28
 
-	measure '15. Color MoM Beneficios' = ```
+	measure '15. Color MoM Beneficios' =
 			VAR __v = [Margen % Var Mes]
 			RETURN
 			    IF ( __v * 1 < 0, "Red", "Green" )
-			```
 		lineageTag: a42fb93e-3df3-437b-bc62-dd3f497634a4
 
-	measure '16. % YoY Beneficios' = ```
+	measure '16. % YoY Beneficios' =
 			VAR __v = [Margen % Var AA]
 			RETURN
 			    IF (
@@ -163,14 +141,12 @@ table Medidas
 			        BLANK (),
 			        FORMAT ( __v, "+0.0%;-0.0%;0.0%" ) & " " & IF ( __v * 1 >= 0, UNICHAR ( 129137 ), UNICHAR ( 129139 ) )
 			    )
-			```
 		lineageTag: da61efc9-c2c6-4911-bf3b-c642047a381b
 
-	measure '16. Color YoY Beneficios' = ```
+	measure '16. Color YoY Beneficios' =
 			VAR __v = [Margen % Var AA]
 			RETURN
 			    IF ( __v * 1 < 0, "Red", "Green" )
-			```
 		lineageTag: 9d15b8f4-97d5-416b-8862-32902e951418
 
 	measure 'KPI Fecha Fin' =
@@ -560,14 +536,14 @@ table Medidas
 
 	measure 'HTML KPI Margen %' =
 			// Tarjeta compacta: 1 columna, 2 filas (año actual protagonista, año anterior chico)
-			// Verde si el margen es positivo, rojo si es negativo
+			// Semáforo igual que la tabla de margen: >= 15% verde, 5%-15% amarillo, < 5% rojo
 			VAR _IconoSvg = "<line x1='19' y1='5' x2='5' y2='19'/><circle cx='6.5' cy='6.5' r='2.5'/><circle cx='17.5' cy='17.5' r='2.5'/>"
 			VAR _Actual   = [04. Margen]
 			VAR _AA       = [Margen Pct AA]
 			VAR _Anio     = YEAR ( [KPI Fecha Fin] )
 			VAR _Fmt      = "0.0%;-0.0%;0.0%"
-			VAR _ColAct   = IF ( _Actual >= 0, "#1E8E3E", "#D93025" )
-			VAR _ColAA    = SWITCH ( TRUE (), ISBLANK ( _AA ), "#80868B", _AA >= 0, "#1E8E3E", "#D93025" )
+			VAR _ColAct   = SWITCH ( TRUE (), _Actual >= 0.15, "#1AAB40", _Actual >= 0.05, "#F2C80F", "#D64550" )
+			VAR _ColAA    = SWITCH ( TRUE (), ISBLANK ( _AA ), "#80868B", _AA >= 0.15, "#1AAB40", _AA >= 0.05, "#F2C80F", "#D64550" )
 			VAR _Icono =
 			    "<div style='flex:0 0 50px;width:50px;height:50px;border-radius:50%;background:#E8F1F1;display:flex;align-items:center;justify-content:center'>"
 			        & "<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='#499195' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'>" & _IconoSvg & "</svg></div>"
@@ -580,19 +556,27 @@ table Medidas
 			            & "<div style='display:flex;justify-content:space-between;align-items:flex-start;gap:12px'>"
 			                & "<div>"
 			                    & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>Margen % " & _Anio & "</div>"
-			                    & "<div style='font-size:34px;font-weight:700;color:" & _ColAct & ";line-height:1.15;margin-top:2px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+			                    & "<div style='font-size:34px;font-weight:700;color:#202124;line-height:1.15;margin-top:2px'>" & FORMAT ( _Actual, _Fmt ) & "<span style='color:" & _ColAct & ";font-size:20px;margin-left:8px;vertical-align:middle'>" & UNICHAR ( 9679 ) & "</span></div>"
 			                & "</div>"
 			                & _Icono
 			            & "</div>"
 			            // Fila 2: año anterior, más chico
 			            & "<div style='margin-top:6px;padding-top:6px;border-top:1px solid #E8EAED;font-size:12px;color:#80868B'>"
 			                & "Año anterior (" & _Anio - 1 & "): "
-			                & "<span style='font-weight:600;color:" & _ColAA & "'>" & IF ( ISBLANK ( _AA ), "s/d", FORMAT ( _AA, _Fmt ) ) & "</span>"
+			                & "<span style='font-weight:600;color:#3C4043'>" & IF ( ISBLANK ( _AA ), "s/d", FORMAT ( _AA, _Fmt ) ) & "</span>"
+			                & IF ( NOT ISBLANK ( _AA ), " <span style='color:" & _ColAA & "'>" & UNICHAR ( 9679 ) & "</span>" )
 			            & "</div>"
 			        & "</div>"
 			    )
 		displayFolder: KPI HTML
 		lineageTag: 9db3d144-caeb-4ac8-b9c7-7f0925526589
+
+	measure '17. Beneficio s/ Ventas Totales' = ```
+			// Beneficio de cada fila sobre las ventas (ingresos) totales de la selección
+			DIVIDE ( [03. Total Beneficio], CALCULATE ( [01. Total Ingresos], ALLSELECTED () ) )
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 582be98d-4dbc-42fb-984d-421569c37d3c
 
 	partition Medidas = m
 		mode: import

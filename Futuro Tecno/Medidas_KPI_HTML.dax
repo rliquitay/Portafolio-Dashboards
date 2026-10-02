@@ -17,7 +17,7 @@
 //  Colores: Ingresos y Margen suben = verde; Gastos suben = rojo.
 //  Flechas: ▲ = variación favorable, ▼ = desfavorable (el % mantiene su signo).
 //  Margen %: tarjeta compacta, solo año actual y año anterior.
-//  Margen %: valor positivo = verde, negativo = rojo.
+//  Margen %: semáforo igual que las tablas (>= 15% verde, 5%-15% amarillo, < 5% rojo).
 // =====================================================================
 
 DEFINE
@@ -253,6 +253,11 @@ DEFINE
         RETURN
             IF ( __v * 1 < 0, "Red", "Green" )
 
+    // ---------- Tablas País / Marca / Cliente --------------------------
+    MEASURE Medidas[17. Beneficio s/ Ventas Totales] =
+        // Beneficio de cada fila sobre las ventas (ingresos) totales de la selección
+        DIVIDE ( [03. Total Beneficio], CALCULATE ( [01. Total Ingresos], ALLSELECTED () ) )
+
     // ---------- Tarjetas HTML -------------------------------------------
     // Las 4 tarjetas usan la misma plantilla: solo cambia el bloque
     // "Parámetros". _Sentido = 1 si subir es bueno, -1 si subir es malo.
@@ -470,14 +475,14 @@ DEFINE
 
     MEASURE Medidas[HTML KPI Margen %] =
         // Tarjeta compacta: 1 columna, 2 filas (año actual protagonista, año anterior chico)
-        // Verde si el margen es positivo, rojo si es negativo
+        // Semáforo igual que la tabla de margen: >= 15% verde, 5%-15% amarillo, < 5% rojo
         VAR _IconoSvg = "<line x1='19' y1='5' x2='5' y2='19'/><circle cx='6.5' cy='6.5' r='2.5'/><circle cx='17.5' cy='17.5' r='2.5'/>"
         VAR _Actual   = [04. Margen]
         VAR _AA       = [Margen Pct AA]
         VAR _Anio     = YEAR ( [KPI Fecha Fin] )
         VAR _Fmt      = "0.0%;-0.0%;0.0%"
-        VAR _ColAct   = IF ( _Actual >= 0, "#1E8E3E", "#D93025" )
-        VAR _ColAA    = SWITCH ( TRUE (), ISBLANK ( _AA ), "#80868B", _AA >= 0, "#1E8E3E", "#D93025" )
+        VAR _ColAct   = SWITCH ( TRUE (), _Actual >= 0.15, "#1AAB40", _Actual >= 0.05, "#F2C80F", "#D64550" )
+        VAR _ColAA    = SWITCH ( TRUE (), ISBLANK ( _AA ), "#80868B", _AA >= 0.15, "#1AAB40", _AA >= 0.05, "#F2C80F", "#D64550" )
         VAR _Icono =
             "<div style='flex:0 0 50px;width:50px;height:50px;border-radius:50%;background:#E8F1F1;display:flex;align-items:center;justify-content:center'>"
                 & "<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='#499195' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'>" & _IconoSvg & "</svg></div>"
@@ -490,14 +495,15 @@ DEFINE
                     & "<div style='display:flex;justify-content:space-between;align-items:flex-start;gap:12px'>"
                         & "<div>"
                             & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>Margen % " & _Anio & "</div>"
-                            & "<div style='font-size:34px;font-weight:700;color:" & _ColAct & ";line-height:1.15;margin-top:2px'>" & FORMAT ( _Actual, _Fmt ) & "</div>"
+                            & "<div style='font-size:34px;font-weight:700;color:#202124;line-height:1.15;margin-top:2px'>" & FORMAT ( _Actual, _Fmt ) & "<span style='color:" & _ColAct & ";font-size:20px;margin-left:8px;vertical-align:middle'>" & UNICHAR ( 9679 ) & "</span></div>"
                         & "</div>"
                         & _Icono
                     & "</div>"
                     // Fila 2: año anterior, más chico
                     & "<div style='margin-top:6px;padding-top:6px;border-top:1px solid #E8EAED;font-size:12px;color:#80868B'>"
                         & "Año anterior (" & _Anio - 1 & "): "
-                        & "<span style='font-weight:600;color:" & _ColAA & "'>" & IF ( ISBLANK ( _AA ), "s/d", FORMAT ( _AA, _Fmt ) ) & "</span>"
+                        & "<span style='font-weight:600;color:#3C4043'>" & IF ( ISBLANK ( _AA ), "s/d", FORMAT ( _AA, _Fmt ) ) & "</span>"
+                        & IF ( NOT ISBLANK ( _AA ), " <span style='color:" & _ColAA & "'>" & UNICHAR ( 9679 ) & "</span>" )
                     & "</div>"
                 & "</div>"
             )
