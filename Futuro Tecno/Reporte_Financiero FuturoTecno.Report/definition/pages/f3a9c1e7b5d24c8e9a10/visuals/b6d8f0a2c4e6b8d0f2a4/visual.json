@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
-  "name": "d9e3c2f4a5b6c7d8e9f0",
+  "name": "b6d8f0a2c4e6b8d0f2a4",
   "position": {
-    "x": 201.52147504251815,
-    "y": 426.67818481224521,
-    "z": 7000,
-    "height": 293.57449450638444,
-    "width": 437.87382231460731,
-    "tabOrder": 7000
+    "x": 140,
+    "y": 325,
+    "z": 2000,
+    "height": 390,
+    "width": 1130,
+    "tabOrder": 2000
   },
   "visual": {
     "visualType": "htmlContent443BE3AD55E043BF878BED274D3A6855",
@@ -23,11 +23,11 @@
                       "Entity": "Medidas"
                     }
                   },
-                  "Property": "HTML Tabla Cliente"
+                  "Property": "HTML Tabla Mensual"
                 }
               },
-              "queryRef": "Medidas.HTML Tabla Cliente",
-              "nativeQueryRef": "HTML Tabla Cliente"
+              "queryRef": "Medidas.HTML Tabla Mensual",
+              "nativeQueryRef": "HTML Tabla Mensual"
             }
           ]
         }

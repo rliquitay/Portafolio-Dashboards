@@ -7,6 +7,7 @@
 //       crear todas las medidas en la tabla Medidas.
 //    4. En el visual HTML, arrastrar [HTML KPI Ingresos] / [HTML KPI Gastos]
 //       / [HTML KPI Margen] / [HTML KPI Margen %] al campo de valores.
+//       Tablas: [HTML Tabla País] / [HTML Tabla Marca] / [HTML Tabla Cliente].
 //
 //  Lógica de períodos (respeta los filtros de País, Marca y Cliente):
 //    - Actual       = año seleccionado en el segmentador.
@@ -289,8 +290,6 @@ DEFINE
         VAR _BgAA    = SWITCH ( TRUE (), ISBLANK ( _VarAA ), _GrisBg, _VarAA * _Sentido >= 0, _VerdeBg, _RojoBg )
         VAR _ColMes  = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _Gris, _VarMes * _Sentido >= 0, _Verde, _Rojo )
         VAR _BgMes   = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _GrisBg, _VarMes * _Sentido >= 0, _VerdeBg, _RojoBg )
-        // Color principal según la variación contra el año anterior
-        VAR _ColPrincipal = _ColAA
         VAR _ColValor     = "#202124"
         VAR _PillAA  = IF ( ISBLANK ( _VarAA ), "s/d", IF ( _VarAA * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtAA )
         VAR _PillMes = IF ( ISBLANK ( _VarMes ), "s/d", IF ( _VarMes * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtMes )
@@ -309,7 +308,7 @@ DEFINE
             IF (
                 ISBLANK ( _Actual ),
                 "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
-                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:14px 18px;background:#FFFFFF;border-radius:12px;border-left:6px solid " & _ColPrincipal & ";box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:14px 18px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
                     & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
                         & "<div>"
                             & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
@@ -359,8 +358,6 @@ DEFINE
         VAR _BgAA    = SWITCH ( TRUE (), ISBLANK ( _VarAA ), _GrisBg, _VarAA * _Sentido >= 0, _VerdeBg, _RojoBg )
         VAR _ColMes  = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _Gris, _VarMes * _Sentido >= 0, _Verde, _Rojo )
         VAR _BgMes   = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _GrisBg, _VarMes * _Sentido >= 0, _VerdeBg, _RojoBg )
-        // Color principal según la variación contra el año anterior
-        VAR _ColPrincipal = _ColAA
         VAR _ColValor     = "#202124"
         VAR _PillAA  = IF ( ISBLANK ( _VarAA ), "s/d", IF ( _VarAA * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtAA )
         VAR _PillMes = IF ( ISBLANK ( _VarMes ), "s/d", IF ( _VarMes * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtMes )
@@ -379,7 +376,7 @@ DEFINE
             IF (
                 ISBLANK ( _Actual ),
                 "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
-                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:14px 18px;background:#FFFFFF;border-radius:12px;border-left:6px solid " & _ColPrincipal & ";box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:14px 18px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
                     & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
                         & "<div>"
                             & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
@@ -429,8 +426,6 @@ DEFINE
         VAR _BgAA    = SWITCH ( TRUE (), ISBLANK ( _VarAA ), _GrisBg, _VarAA * _Sentido >= 0, _VerdeBg, _RojoBg )
         VAR _ColMes  = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _Gris, _VarMes * _Sentido >= 0, _Verde, _Rojo )
         VAR _BgMes   = SWITCH ( TRUE (), ISBLANK ( _VarMes ), _GrisBg, _VarMes * _Sentido >= 0, _VerdeBg, _RojoBg )
-        // Color principal según la variación contra el año anterior
-        VAR _ColPrincipal = _ColAA
         VAR _ColValor     = "#202124"
         VAR _PillAA  = IF ( ISBLANK ( _VarAA ), "s/d", IF ( _VarAA * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtAA )
         VAR _PillMes = IF ( ISBLANK ( _VarMes ), "s/d", IF ( _VarMes * _Sentido >= 0, UNICHAR ( 9650 ), UNICHAR ( 9660 ) ) & " " & _TxtMes )
@@ -449,7 +444,7 @@ DEFINE
             IF (
                 ISBLANK ( _Actual ),
                 "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
-                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:14px 18px;background:#FFFFFF;border-radius:12px;border-left:6px solid " & _ColPrincipal & ";box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:14px 18px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
                     & "<div style='display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px'>"
                         & "<div>"
                             & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>" & _Titulo & " " & _Anio & "</div>"
@@ -505,6 +500,501 @@ DEFINE
                         & "<span style='font-weight:600;color:#3C4043'>" & IF ( ISBLANK ( _AA ), "s/d", FORMAT ( _AA, _Fmt ) ) & "</span>"
                         & IF ( NOT ISBLANK ( _AA ), " <span style='color:" & _ColAA & "'>" & UNICHAR ( 9679 ) & "</span>" )
                     & "</div>"
+                & "</div>"
+            )
+
+    // ---------- Tablas HTML (País / Marca / Cliente) ----------------------
+
+    MEASURE Medidas[HTML Tabla País] =
+        // Tabla HTML: Beneficio, % s/ ventas totales (barra) y Margen % (semáforo)
+        VAR _Titulo    = "Beneficio por País"
+        VAR _Encabezado = "País"
+        VAR _VentasTot = [01. Total Ingresos]
+        VAR _Filas =
+            FILTER (
+                ADDCOLUMNS (
+                    VALUES ( FuturoTecno_2020_2022[País] ),
+                    "@Ben", [03. Total Beneficio],
+                    "@Ing", [01. Total Ingresos]
+                ),
+                NOT ISBLANK ( [@Ing] )
+            )
+        VAR _MaxShare = MAXX ( _Filas, ABS ( DIVIDE ( [@Ben], _VentasTot ) ) )
+        VAR _Td  = "padding:7px 6px;border-bottom:1px solid #F1F3F4;vertical-align:middle"
+        VAR _Th  = "padding:4px 6px 6px;font-size:11px;font-weight:600;color:#80868B;border-bottom:1px solid #E8EAED"
+        VAR _Html =
+            CONCATENATEX (
+                _Filas,
+                VAR _b = [@Ben]
+                VAR _a = ABS ( _b )
+                VAR _s = DIVIDE ( _b, _VentasTot )
+                VAR _m = DIVIDE ( _b, [@Ing] )
+                VAR _Num =
+                    IF ( _b < 0, "-", "" ) & "$"
+                        & SWITCH (
+                            TRUE (),
+                            _a >= 1000000000, FORMAT ( _a / 1000000000, "0.0" ) & "B",
+                            _a >= 100000000, FORMAT ( _a / 1000000, "0" ) & "M",
+                            _a >= 1000000, FORMAT ( _a / 1000000, "0.0" ) & "M",
+                            _a >= 100000, FORMAT ( _a / 1000, "0" ) & "K",
+                            _a >= 1000, FORMAT ( _a / 1000, "0.0" ) & "K",
+                            FORMAT ( _a, "0" )
+                        )
+                VAR _Ancho = FORMAT ( DIVIDE ( ABS ( _s ), _MaxShare ) * 100, "0.0" )
+                VAR _ColBar = IF ( _b < 0, "#D64550", "#6FA8AB" )
+                // Semáforo igual que la tarjeta Margen %: >= 15% verde, 5%-15% amarillo, < 5% rojo
+                VAR _ColSem = SWITCH ( TRUE (), _m >= 0.15, "#1AAB40", _m >= 0.05, "#F2C80F", "#D64550" )
+                RETURN
+                    "<tr>"
+                        & "<td style='" & _Td & ";padding-left:0;color:#202124'>" & FuturoTecno_2020_2022[País] & "</td>"
+                        & "<td style='" & _Td & ";text-align:right;font-weight:600;white-space:nowrap'>" & _Num & "</td>"
+                        & "<td style='" & _Td & ";width:38%'>"
+                            & "<div style='display:flex;align-items:center;gap:6px'>"
+                                & "<div style='flex:1;height:8px;background:#F1F3F4;border-radius:4px'>"
+                                    & "<div style='width:" & _Ancho & "%;height:8px;background:" & _ColBar & ";border-radius:4px'></div>"
+                                & "</div>"
+                                & "<span style='font-size:11px;color:#5F6368;min-width:34px;text-align:right'>" & FORMAT ( _s, "0.0%" ) & "</span>"
+                            & "</div>"
+                        & "</td>"
+                        & "<td style='" & _Td & ";padding-right:0;text-align:right;white-space:nowrap'>"
+                            & FORMAT ( _m, "0.0%" ) & " <span style='color:" & _ColSem & "'>" & UNICHAR ( 9679 ) & "</span>"
+                        & "</td>"
+                    & "</tr>",
+                "",
+                [@Ben], DESC
+            )
+        RETURN
+            IF (
+                ISEMPTY ( _Filas ),
+                "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:12px 16px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                    & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368;margin-bottom:6px'>" & _Titulo & "</div>"
+                    & "<table style='width:100%;border-collapse:collapse;font-size:12px;color:#3C4043'>"
+                        & "<thead><tr>"
+                            & "<th style='" & _Th & ";padding-left:0;text-align:left'>" & _Encabezado & "</th>"
+                            & "<th style='" & _Th & ";text-align:right'>Beneficio</th>"
+                            & "<th style='" & _Th & ";text-align:left'>% s/ Ventas</th>"
+                            & "<th style='" & _Th & ";padding-right:0;text-align:right'>Margen %</th>"
+                        & "</tr></thead>"
+                        & "<tbody>" & _Html & "</tbody>"
+                    & "</table>"
+                & "</div>"
+            )
+
+    MEASURE Medidas[HTML Tabla Marca] =
+        // Tabla HTML: Beneficio, % s/ ventas totales (barra) y Margen % (semáforo)
+        VAR _Titulo    = "Beneficio por Marca"
+        VAR _Encabezado = "Marca"
+        VAR _VentasTot = [01. Total Ingresos]
+        VAR _Filas =
+            FILTER (
+                ADDCOLUMNS (
+                    VALUES ( FuturoTecno_2020_2022[Marca] ),
+                    "@Ben", [03. Total Beneficio],
+                    "@Ing", [01. Total Ingresos]
+                ),
+                NOT ISBLANK ( [@Ing] )
+            )
+        VAR _MaxShare = MAXX ( _Filas, ABS ( DIVIDE ( [@Ben], _VentasTot ) ) )
+        VAR _Td  = "padding:7px 6px;border-bottom:1px solid #F1F3F4;vertical-align:middle"
+        VAR _Th  = "padding:4px 6px 6px;font-size:11px;font-weight:600;color:#80868B;border-bottom:1px solid #E8EAED"
+        VAR _Html =
+            CONCATENATEX (
+                _Filas,
+                VAR _b = [@Ben]
+                VAR _a = ABS ( _b )
+                VAR _s = DIVIDE ( _b, _VentasTot )
+                VAR _m = DIVIDE ( _b, [@Ing] )
+                VAR _Num =
+                    IF ( _b < 0, "-", "" ) & "$"
+                        & SWITCH (
+                            TRUE (),
+                            _a >= 1000000000, FORMAT ( _a / 1000000000, "0.0" ) & "B",
+                            _a >= 100000000, FORMAT ( _a / 1000000, "0" ) & "M",
+                            _a >= 1000000, FORMAT ( _a / 1000000, "0.0" ) & "M",
+                            _a >= 100000, FORMAT ( _a / 1000, "0" ) & "K",
+                            _a >= 1000, FORMAT ( _a / 1000, "0.0" ) & "K",
+                            FORMAT ( _a, "0" )
+                        )
+                VAR _Ancho = FORMAT ( DIVIDE ( ABS ( _s ), _MaxShare ) * 100, "0.0" )
+                VAR _ColBar = IF ( _b < 0, "#D64550", "#6FA8AB" )
+                // Semáforo igual que la tarjeta Margen %: >= 15% verde, 5%-15% amarillo, < 5% rojo
+                VAR _ColSem = SWITCH ( TRUE (), _m >= 0.15, "#1AAB40", _m >= 0.05, "#F2C80F", "#D64550" )
+                RETURN
+                    "<tr>"
+                        & "<td style='" & _Td & ";padding-left:0;color:#202124'>" & FuturoTecno_2020_2022[Marca] & "</td>"
+                        & "<td style='" & _Td & ";text-align:right;font-weight:600;white-space:nowrap'>" & _Num & "</td>"
+                        & "<td style='" & _Td & ";width:38%'>"
+                            & "<div style='display:flex;align-items:center;gap:6px'>"
+                                & "<div style='flex:1;height:8px;background:#F1F3F4;border-radius:4px'>"
+                                    & "<div style='width:" & _Ancho & "%;height:8px;background:" & _ColBar & ";border-radius:4px'></div>"
+                                & "</div>"
+                                & "<span style='font-size:11px;color:#5F6368;min-width:34px;text-align:right'>" & FORMAT ( _s, "0.0%" ) & "</span>"
+                            & "</div>"
+                        & "</td>"
+                        & "<td style='" & _Td & ";padding-right:0;text-align:right;white-space:nowrap'>"
+                            & FORMAT ( _m, "0.0%" ) & " <span style='color:" & _ColSem & "'>" & UNICHAR ( 9679 ) & "</span>"
+                        & "</td>"
+                    & "</tr>",
+                "",
+                [@Ben], DESC
+            )
+        RETURN
+            IF (
+                ISEMPTY ( _Filas ),
+                "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:12px 16px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                    & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368;margin-bottom:6px'>" & _Titulo & "</div>"
+                    & "<table style='width:100%;border-collapse:collapse;font-size:12px;color:#3C4043'>"
+                        & "<thead><tr>"
+                            & "<th style='" & _Th & ";padding-left:0;text-align:left'>" & _Encabezado & "</th>"
+                            & "<th style='" & _Th & ";text-align:right'>Beneficio</th>"
+                            & "<th style='" & _Th & ";text-align:left'>% s/ Ventas</th>"
+                            & "<th style='" & _Th & ";padding-right:0;text-align:right'>Margen %</th>"
+                        & "</tr></thead>"
+                        & "<tbody>" & _Html & "</tbody>"
+                    & "</table>"
+                & "</div>"
+            )
+
+    MEASURE Medidas[HTML Tabla Cliente] =
+        // Tabla HTML: Beneficio, % s/ ventas totales (barra) y Margen % (semáforo)
+        VAR _Titulo    = "Beneficio por Cliente"
+        VAR _Encabezado = "Cliente"
+        VAR _VentasTot = [01. Total Ingresos]
+        VAR _Filas =
+            FILTER (
+                ADDCOLUMNS (
+                    VALUES ( FuturoTecno_2020_2022[Cliente] ),
+                    "@Ben", [03. Total Beneficio],
+                    "@Ing", [01. Total Ingresos]
+                ),
+                NOT ISBLANK ( [@Ing] )
+            )
+        VAR _MaxShare = MAXX ( _Filas, ABS ( DIVIDE ( [@Ben], _VentasTot ) ) )
+        VAR _Td  = "padding:7px 6px;border-bottom:1px solid #F1F3F4;vertical-align:middle"
+        VAR _Th  = "padding:4px 6px 6px;font-size:11px;font-weight:600;color:#80868B;border-bottom:1px solid #E8EAED"
+        VAR _Html =
+            CONCATENATEX (
+                _Filas,
+                VAR _b = [@Ben]
+                VAR _a = ABS ( _b )
+                VAR _s = DIVIDE ( _b, _VentasTot )
+                VAR _m = DIVIDE ( _b, [@Ing] )
+                VAR _Num =
+                    IF ( _b < 0, "-", "" ) & "$"
+                        & SWITCH (
+                            TRUE (),
+                            _a >= 1000000000, FORMAT ( _a / 1000000000, "0.0" ) & "B",
+                            _a >= 100000000, FORMAT ( _a / 1000000, "0" ) & "M",
+                            _a >= 1000000, FORMAT ( _a / 1000000, "0.0" ) & "M",
+                            _a >= 100000, FORMAT ( _a / 1000, "0" ) & "K",
+                            _a >= 1000, FORMAT ( _a / 1000, "0.0" ) & "K",
+                            FORMAT ( _a, "0" )
+                        )
+                VAR _Ancho = FORMAT ( DIVIDE ( ABS ( _s ), _MaxShare ) * 100, "0.0" )
+                VAR _ColBar = IF ( _b < 0, "#D64550", "#6FA8AB" )
+                // Semáforo igual que la tarjeta Margen %: >= 15% verde, 5%-15% amarillo, < 5% rojo
+                VAR _ColSem = SWITCH ( TRUE (), _m >= 0.15, "#1AAB40", _m >= 0.05, "#F2C80F", "#D64550" )
+                RETURN
+                    "<tr>"
+                        & "<td style='" & _Td & ";padding-left:0;color:#202124'>" & FuturoTecno_2020_2022[Cliente] & "</td>"
+                        & "<td style='" & _Td & ";text-align:right;font-weight:600;white-space:nowrap'>" & _Num & "</td>"
+                        & "<td style='" & _Td & ";width:38%'>"
+                            & "<div style='display:flex;align-items:center;gap:6px'>"
+                                & "<div style='flex:1;height:8px;background:#F1F3F4;border-radius:4px'>"
+                                    & "<div style='width:" & _Ancho & "%;height:8px;background:" & _ColBar & ";border-radius:4px'></div>"
+                                & "</div>"
+                                & "<span style='font-size:11px;color:#5F6368;min-width:34px;text-align:right'>" & FORMAT ( _s, "0.0%" ) & "</span>"
+                            & "</div>"
+                        & "</td>"
+                        & "<td style='" & _Td & ";padding-right:0;text-align:right;white-space:nowrap'>"
+                            & FORMAT ( _m, "0.0%" ) & " <span style='color:" & _ColSem & "'>" & UNICHAR ( 9679 ) & "</span>"
+                        & "</td>"
+                    & "</tr>",
+                "",
+                [@Ben], DESC
+            )
+        RETURN
+            IF (
+                ISEMPTY ( _Filas ),
+                "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:12px 16px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                    & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368;margin-bottom:6px'>" & _Titulo & "</div>"
+                    & "<table style='width:100%;border-collapse:collapse;font-size:12px;color:#3C4043'>"
+                        & "<thead><tr>"
+                            & "<th style='" & _Th & ";padding-left:0;text-align:left'>" & _Encabezado & "</th>"
+                            & "<th style='" & _Th & ";text-align:right'>Beneficio</th>"
+                            & "<th style='" & _Th & ";text-align:left'>% s/ Ventas</th>"
+                            & "<th style='" & _Th & ";padding-right:0;text-align:right'>Margen %</th>"
+                        & "</tr></thead>"
+                        & "<tbody>" & _Html & "</tbody>"
+                    & "</table>"
+                & "</div>"
+            )
+
+    // ---------- Evolución mensual (gráfico + tabla) -------------------------
+
+    MEASURE Medidas[HTML Grafico Beneficio Margen] =
+        // Meses del período seleccionado con sus importes
+        VAR _Base =
+            DISTINCT ( SELECTCOLUMNS ( Calendario, "@Mes", EOMONTH ( Calendario[Date], 0 ) ) )
+        VAR _Datos =
+            ADDCOLUMNS (
+                _Base,
+                "@Ing", VAR m = [@Mes] RETURN CALCULATE ( [01. Total Ingresos], Calendario[Date] > EOMONTH ( m, -1 ) && Calendario[Date] <= m ),
+                "@Gas", VAR m = [@Mes] RETURN CALCULATE ( [02. Total Gastos], Calendario[Date] > EOMONTH ( m, -1 ) && Calendario[Date] <= m )
+            )
+        VAR _Meses =
+            ADDCOLUMNS (
+                FILTER ( _Datos, NOT ISBLANK ( [@Ing] ) ),
+                "@Ben", [@Ing] - [@Gas],
+                "@Mg", DIVIDE ( [@Ing] - [@Gas], [@Ing] )
+            )
+        VAR _N = COUNTROWS ( _Meses )
+        VAR _Anios = DISTINCTCOUNT ( Calendario[Date] ) > 366
+        VAR _Periodo = IF ( _Anios, YEAR ( MINX ( _Meses, [@Mes] ) ) & "–" & YEAR ( MAXX ( _Meses, [@Mes] ) ), YEAR ( MAXX ( _Meses, [@Mes] ) ) )
+        // ---- Geometría del gráfico (coordenadas del SVG) ----
+        VAR _W = 1000  VAR _H = 240
+        VAR _L = 64    VAR _R = 24   VAR _T = 34   VAR _B = 30
+        VAR _PW = _W - _L - _R
+        VAR _PH = _H - _T - _B
+        VAR _Slot = DIVIDE ( _PW, _N )
+        VAR _BarW = _Slot * 0.56
+        // Eje izquierdo (Beneficio): siempre incluye el 0
+        VAR _MaxB = MAXX ( _Meses, [@Ben] )
+        VAR _MinB = MINX ( _Meses, [@Ben] )
+        VAR _HiB = IF ( _MaxB > 0, _MaxB * 1.6, 0 )   // las barras usan el ~60% inferior
+        VAR _LoB = IF ( _MinB < 0, _MinB * 1.12, 0 )
+        VAR _RgB = IF ( _HiB - _LoB = 0, 1, _HiB - _LoB )
+        VAR _Y0 = _T + DIVIDE ( _HiB, _RgB ) * _PH
+        // Eje derecho (Margen %): la línea ocupa la franja superior para no tapar las barras
+        VAR _MaxM = MAXX ( _Meses, [@Mg] )
+        VAR _MinM = MINX ( _Meses, [@Mg] )
+        VAR _RgM0 = IF ( _MaxM - _MinM = 0, 0.02, _MaxM - _MinM )
+        VAR _HiM = _MaxM + _RgM0 * 0.25
+        VAR _LoM = _MinM - _RgM0 * 2.7   // la línea queda en la franja superior
+        VAR _RgM = _HiM - _LoM
+        VAR _Puntos =
+            ADDCOLUMNS (
+                _Meses,
+                "@i", VAR m = [@Mes] RETURN COUNTROWS ( FILTER ( _Meses, [@Mes] <= m ) ),
+                "@yB", _T + DIVIDE ( _HiB - [@Ben], _RgB ) * _PH,
+                "@yM", _T + DIVIDE ( _HiM - [@Mg], _RgM ) * _PH
+            )
+        VAR _Grid =
+            CONCATENATEX (
+                GENERATESERIES ( 0, 4 ),
+                VAR k = [Value]
+                VAR y = _T + k * _PH / 4
+                VAR vB = _HiB - k * _RgB / 4
+                VAR _Lbl =
+                    VAR v = vB VAR a = ABS ( v )
+                    RETURN IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (),
+                        a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B",
+                        a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M",
+                        a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M",
+                        a >= 100000, FORMAT ( a / 1000, "0" ) & "K",
+                        a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K",
+                        FORMAT ( a, "0" ) )
+                RETURN
+                    "<line x1='" & _L & "' x2='" & ( _W - _R ) & "' y1='" & FORMAT ( y, "0.0" ) & "' y2='" & FORMAT ( y, "0.0" ) & "' stroke='#E8EAED' stroke-width='1'/>"
+                        & "<text x='" & ( _L - 8 ) & "' y='" & FORMAT ( y + 4, "0.0" ) & "' text-anchor='end' font-size='11' fill='#80868B'>" & _Lbl & "</text>",
+                ""
+            )
+        VAR _Barras =
+            CONCATENATEX (
+                _Puntos,
+                VAR x = _L + ( [@i] - 0.5 ) * _Slot
+                VAR yTop = MIN ( [@yB], _Y0 )
+                VAR h = ABS ( _Y0 - [@yB] )
+                VAR m = [@Mes]
+                VAR _Mes = SWITCH ( MONTH ( m ), 1, "Ene", 2, "Feb", 3, "Mar", 4, "Abr", 5, "May", 6, "Jun", 7, "Jul", 8, "Ago", 9, "Sep", 10, "Oct", 11, "Nov", 12, "Dic" ) & IF ( _Anios, " " & RIGHT ( YEAR ( m ), 2 ) )
+                VAR _VerEtiq = _N <= 12 || MOD ( [@i], 3 ) = 1
+                VAR _Val =
+                    VAR v = [@Ben] VAR a = ABS ( v )
+                    RETURN IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (),
+                        a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B",
+                        a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M",
+                        a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M",
+                        a >= 100000, FORMAT ( a / 1000, "0" ) & "K",
+                        a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K",
+                        FORMAT ( a, "0" ) )
+                RETURN
+                    "<rect x='" & FORMAT ( x - _BarW / 2, "0.0" ) & "' y='" & FORMAT ( yTop, "0.0" ) & "' width='" & FORMAT ( _BarW, "0.0" ) & "' height='" & FORMAT ( h, "0.0" ) & "' rx='3' fill='" & IF ( [@Ben] < 0, "#D64550", "#6FA8AB" ) & "'><title>" & _Mes & ": " & _Val & "</title></rect>"
+                        & IF ( _N <= 12, "<text x='" & FORMAT ( x, "0.0" ) & "' y='" & FORMAT ( _Y0 - 6, "0.0" ) & "' text-anchor='middle' font-size='10' font-weight='600' fill='#FFFFFF'>" & _Val & "</text>" )
+                        & IF ( _VerEtiq, "<text x='" & FORMAT ( x, "0.0" ) & "' y='" & ( _H - 10 ) & "' text-anchor='middle' font-size='11' fill='#5F6368'>" & _Mes & "</text>" ),
+                "",
+                [@i], ASC
+            )
+        VAR _Linea =
+            "<polyline fill='none' stroke='#E8833A' stroke-width='2.5' stroke-linejoin='round' points='"
+                & CONCATENATEX ( _Puntos, FORMAT ( _L + ( [@i] - 0.5 ) * _Slot, "0.0" ) & "," & FORMAT ( [@yM], "0.0" ), " ", [@i], ASC )
+                & "'/>"
+        VAR _Marcas =
+            CONCATENATEX (
+                _Puntos,
+                VAR x = _L + ( [@i] - 0.5 ) * _Slot
+                RETURN
+                    "<circle cx='" & FORMAT ( x, "0.0" ) & "' cy='" & FORMAT ( [@yM], "0.0" ) & "' r='4' fill='#FFFFFF' stroke='#E8833A' stroke-width='2'><title>Margen: " & FORMAT ( [@Mg], "0.0%" ) & "</title></circle>"
+                        & IF ( _N <= 12, "<text x='" & FORMAT ( x, "0.0" ) & "' y='" & FORMAT ( [@yM] - 9, "0.0" ) & "' text-anchor='middle' font-size='10' font-weight='600' fill='#C9661F'>" & FORMAT ( [@Mg], "0.0%" ) & "</text>" ),
+                "",
+                [@i], ASC
+            )
+        VAR _Leyenda =
+            "<rect x='" & _L & "' y='8' width='12' height='12' rx='2' fill='#6FA8AB'/>"
+                & "<text x='" & ( _L + 18 ) & "' y='18' font-size='12' fill='#3C4043'>Beneficio ($)</text>"
+                & "<line x1='" & ( _L + 120 ) & "' x2='" & ( _L + 144 ) & "' y1='14' y2='14' stroke='#E8833A' stroke-width='2.5'/>"
+                & "<circle cx='" & ( _L + 132 ) & "' cy='14' r='4' fill='#FFFFFF' stroke='#E8833A' stroke-width='2'/>"
+                & "<text x='" & ( _L + 152 ) & "' y='18' font-size='12' fill='#3C4043'>Margen %</text>"
+        RETURN
+            IF (
+                _N = 0,
+                "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>Sin datos</div>",
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:12px 16px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                    & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368'>Beneficio y margen % por mes " & _Periodo & "</div>"
+                    & "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 " & _W & " " & _H & "' width='100%' style='display:block;font-family:Segoe UI,Arial,sans-serif'>"
+                        & _Leyenda & _Grid
+                        & "<line x1='" & _L & "' x2='" & ( _W - _R ) & "' y1='" & FORMAT ( _Y0, "0.0" ) & "' y2='" & FORMAT ( _Y0, "0.0" ) & "' stroke='#BDC1C6' stroke-width='1'/>"
+                        & _Barras & _Linea & _Marcas
+                    & "</svg>"
+                & "</div>"
+            )
+
+    MEASURE Medidas[HTML Tabla Mensual] =
+        // Meses del período seleccionado con sus importes
+        VAR _Base =
+            DISTINCT ( SELECTCOLUMNS ( Calendario, "@Mes", EOMONTH ( Calendario[Date], 0 ) ) )
+        VAR _Datos =
+            ADDCOLUMNS (
+                _Base,
+                "@Ing", VAR m = [@Mes] RETURN CALCULATE ( [01. Total Ingresos], Calendario[Date] > EOMONTH ( m, -1 ) && Calendario[Date] <= m ),
+                "@Gas", VAR m = [@Mes] RETURN CALCULATE ( [02. Total Gastos], Calendario[Date] > EOMONTH ( m, -1 ) && Calendario[Date] <= m )
+            )
+        VAR _Meses =
+            ADDCOLUMNS (
+                FILTER ( _Datos, NOT ISBLANK ( [@Ing] ) ),
+                "@Ben", [@Ing] - [@Gas],
+                "@Mg", DIVIDE ( [@Ing] - [@Gas], [@Ing] )
+            )
+        VAR _N = COUNTROWS ( _Meses )
+        VAR _Anios = DISTINCTCOUNT ( Calendario[Date] ) > 366
+        VAR _Periodo = IF ( _Anios, YEAR ( MINX ( _Meses, [@Mes] ) ) & "–" & YEAR ( MAXX ( _Meses, [@Mes] ) ), YEAR ( MAXX ( _Meses, [@Mes] ) ) )
+        VAR _TotIng = SUMX ( _Meses, [@Ing] )
+        VAR _TotGas = SUMX ( _Meses, [@Gas] )
+        VAR _TotBen = _TotIng - _TotGas
+        VAR _MaxShare = MAXX ( _Meses, ABS ( DIVIDE ( [@Ben], _TotIng ) ) )
+        VAR _Td = "padding:3px 8px;border-bottom:1px solid #F1F3F4;vertical-align:middle"
+        VAR _Th = "padding:4px 8px 6px;font-size:11px;font-weight:600;color:#80868B;border-bottom:1px solid #E8EAED;text-align:right"
+        VAR _Filas =
+            CONCATENATEX (
+                _Meses,
+                VAR m = [@Mes]
+                VAR _Mes = SWITCH ( MONTH ( m ), 1, "Ene", 2, "Feb", 3, "Mar", 4, "Abr", 5, "May", 6, "Jun", 7, "Jul", 8, "Ago", 9, "Sep", 10, "Oct", 11, "Nov", 12, "Dic" ) & IF ( _Anios, " " & YEAR ( m ) )
+                VAR _s = DIVIDE ( [@Ben], _TotIng )
+                VAR _Ancho = FORMAT ( DIVIDE ( ABS ( _s ), _MaxShare ) * 100, "0.0" )
+                VAR _ColSem = SWITCH ( TRUE (), [@Mg] >= 0.15, "#1AAB40", [@Mg] >= 0.05, "#F2C80F", "#D64550" )
+                VAR _Ing =
+                    VAR v = [@Ing] VAR a = ABS ( v )
+                    RETURN IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (),
+                        a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B",
+                        a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M",
+                        a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M",
+                        a >= 100000, FORMAT ( a / 1000, "0" ) & "K",
+                        a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K",
+                        FORMAT ( a, "0" ) )
+                VAR _Gas =
+                    VAR v = [@Gas] VAR a = ABS ( v )
+                    RETURN IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (),
+                        a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B",
+                        a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M",
+                        a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M",
+                        a >= 100000, FORMAT ( a / 1000, "0" ) & "K",
+                        a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K",
+                        FORMAT ( a, "0" ) )
+                VAR _Ben =
+                    VAR v = [@Ben] VAR a = ABS ( v )
+                    RETURN IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (),
+                        a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B",
+                        a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M",
+                        a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M",
+                        a >= 100000, FORMAT ( a / 1000, "0" ) & "K",
+                        a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K",
+                        FORMAT ( a, "0" ) )
+                RETURN
+                    "<tr>"
+                        & "<td style='" & _Td & ";padding-left:0;text-align:left;color:#202124'>" & _Mes & "</td>"
+                        & "<td style='" & _Td & ";text-align:right'>" & _Ing & "</td>"
+                        & "<td style='" & _Td & ";text-align:right'>" & _Gas & "</td>"
+                        & "<td style='" & _Td & ";text-align:right;font-weight:600'>" & _Ben & "</td>"
+                        & "<td style='" & _Td & ";width:30%'>"
+                            & "<div style='display:flex;align-items:center;gap:8px'>"
+                                & "<div style='flex:1;height:8px;background:#F1F3F4;border-radius:4px'>"
+                                    & "<div style='width:" & _Ancho & "%;height:8px;background:" & IF ( [@Ben] < 0, "#D64550", "#6FA8AB" ) & ";border-radius:4px'></div>"
+                                & "</div>"
+                                & "<span style='font-size:11px;color:#5F6368;min-width:36px;text-align:right'>" & FORMAT ( _s, "0.0%" ) & "</span>"
+                            & "</div>"
+                        & "</td>"
+                        & "<td style='" & _Td & ";padding-right:0;text-align:right;white-space:nowrap'>" & FORMAT ( [@Mg], "0.0%" ) & " <span style='color:" & _ColSem & "'>" & UNICHAR ( 9679 ) & "</span></td>"
+                    & "</tr>",
+                "",
+                [@Mes], ASC
+            )
+        VAR _MgTot = DIVIDE ( _TotBen, _TotIng )
+        VAR _ColTot = SWITCH ( TRUE (), _MgTot >= 0.15, "#1AAB40", _MgTot >= 0.05, "#F2C80F", "#D64550" )
+        VAR _TIng =
+            VAR v = _TotIng VAR a = ABS ( v )
+            RETURN IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (),
+                a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B",
+                a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M",
+                a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M",
+                a >= 100000, FORMAT ( a / 1000, "0" ) & "K",
+                a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K",
+                FORMAT ( a, "0" ) )
+        VAR _TGas =
+            VAR v = _TotGas VAR a = ABS ( v )
+            RETURN IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (),
+                a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B",
+                a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M",
+                a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M",
+                a >= 100000, FORMAT ( a / 1000, "0" ) & "K",
+                a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K",
+                FORMAT ( a, "0" ) )
+        VAR _TBen =
+            VAR v = _TotBen VAR a = ABS ( v )
+            RETURN IF ( v < 0, "-", "" ) & "$" & SWITCH ( TRUE (),
+                a >= 1000000000, FORMAT ( a / 1000000000, "0.0" ) & "B",
+                a >= 100000000, FORMAT ( a / 1000000, "0" ) & "M",
+                a >= 1000000, FORMAT ( a / 1000000, "0.0" ) & "M",
+                a >= 100000, FORMAT ( a / 1000, "0" ) & "K",
+                a >= 1000, FORMAT ( a / 1000, "0.0" ) & "K",
+                FORMAT ( a, "0" ) )
+        VAR _Tf = "padding:6px 8px;border-top:2px solid #E8EAED;font-weight:700;color:#202124;text-align:right"
+        RETURN
+            IF (
+                _N = 0,
+                "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>Sin datos</div>",
+                "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:12px 16px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+                    & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368;margin-bottom:6px'>Resultado mensual " & _Periodo & "</div>"
+                    & "<table style='width:100%;border-collapse:collapse;font-size:12px;color:#3C4043'>"
+                        & "<thead><tr>"
+                            & "<th style='" & _Th & ";padding-left:0;text-align:left'>Mes</th>"
+                            & "<th style='" & _Th & "'>Ingresos</th>"
+                            & "<th style='" & _Th & "'>Egresos</th>"
+                            & "<th style='" & _Th & "'>Beneficio</th>"
+                            & "<th style='" & _Th & ";text-align:left'>Beneficio s/ ventas totales</th>"
+                            & "<th style='" & _Th & ";padding-right:0'>Margen %</th>"
+                        & "</tr></thead>"
+                        & "<tbody>" & _Filas & "</tbody>"
+                        & "<tfoot><tr>"
+                            & "<td style='" & _Tf & ";padding-left:0;text-align:left'>Total</td>"
+                            & "<td style='" & _Tf & "'>" & _TIng & "</td>"
+                            & "<td style='" & _Tf & "'>" & _TGas & "</td>"
+                            & "<td style='" & _Tf & "'>" & _TBen & "</td>"
+                            & "<td style='" & _Tf & ";text-align:left;font-weight:600;color:#5F6368'>" & FORMAT ( DIVIDE ( _TotBen, _TotIng ), "0.0%" ) & "</td>"
+                            & "<td style='" & _Tf & ";padding-right:0;white-space:nowrap'>" & FORMAT ( _MgTot, "0.0%" ) & " <span style='color:" & _ColTot & "'>" & UNICHAR ( 9679 ) & "</span></td>"
+                        & "</tr></tfoot>"
+                    & "</table>"
                 & "</div>"
             )
 

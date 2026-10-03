@@ -118,6 +118,15 @@ cultureInfo en-US
 			          }
 			        }
 			      ]
+			    },
+			    "medidas.column17__beneficio_s__ventas_totales": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "17. Beneficio s/ Ventas Totales"
+			        }
+			      },
+			      "State": "Generated"
 			    }
 			  }
 			}

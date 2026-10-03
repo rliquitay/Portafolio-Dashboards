@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
-  "name": "d9e3c2f4a5b6c7d8e9f0",
+  "name": "a5c7e9f1b3d5a7c9e1f3",
   "position": {
-    "x": 201.52147504251815,
-    "y": 426.67818481224521,
-    "z": 7000,
-    "height": 293.57449450638444,
-    "width": 437.87382231460731,
-    "tabOrder": 7000
+    "x": 140,
+    "y": 10,
+    "z": 1000,
+    "height": 310,
+    "width": 1130,
+    "tabOrder": 1000
   },
   "visual": {
     "visualType": "htmlContent443BE3AD55E043BF878BED274D3A6855",
@@ -23,11 +23,11 @@
                       "Entity": "Medidas"
                     }
                   },
-                  "Property": "HTML Tabla Cliente"
+                  "Property": "HTML Grafico Beneficio Margen"
                 }
               },
-              "queryRef": "Medidas.HTML Tabla Cliente",
-              "nativeQueryRef": "HTML Tabla Cliente"
+              "queryRef": "Medidas.HTML Grafico Beneficio Margen",
+              "nativeQueryRef": "HTML Grafico Beneficio Margen"
             }
           ]
         }
