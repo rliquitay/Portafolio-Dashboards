@@ -148,6 +148,11 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "syncGroup": {
+      "groupName": "Pais",
+      "fieldChanges": true,
+      "filterChanges": true
+    }
   }
 }

@@ -545,7 +545,7 @@ table Medidas
 			    IF (
 			        ISBLANK ( _Actual ),
 			        "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>Margen %: sin datos</div>",
-			        "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;padding:12px 16px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
+			        "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:12px 16px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
 			            // Fila 1: margen del año + ícono arriba a la derecha
 			            & "<div style='display:flex;justify-content:space-between;align-items:flex-start;gap:12px'>"
 			                & "<div>"
@@ -635,7 +635,7 @@ table Medidas
 			        "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
 			        "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:12px 16px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
 			            & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368;margin-bottom:6px'>" & _Titulo & "</div>"
-			            & "<table style='width:100%;border-collapse:collapse;font-size:12px;color:#3C4043'>"
+			            & "<table style='width:100%;height:calc(100% - 24px);border-collapse:collapse;font-size:12px;color:#3C4043'>"
 			                & "<thead><tr>"
 			                    & "<th style='" & _Th & ";padding-left:0;text-align:left'>" & _Encabezado & "</th>"
 			                    & "<th style='" & _Th & ";text-align:right'>Beneficio</th>"
@@ -713,7 +713,7 @@ table Medidas
 			        "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
 			        "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:12px 16px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
 			            & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368;margin-bottom:6px'>" & _Titulo & "</div>"
-			            & "<table style='width:100%;border-collapse:collapse;font-size:12px;color:#3C4043'>"
+			            & "<table style='width:100%;height:calc(100% - 24px);border-collapse:collapse;font-size:12px;color:#3C4043'>"
 			                & "<thead><tr>"
 			                    & "<th style='" & _Th & ";padding-left:0;text-align:left'>" & _Encabezado & "</th>"
 			                    & "<th style='" & _Th & ";text-align:right'>Beneficio</th>"
@@ -791,7 +791,7 @@ table Medidas
 			        "<div style='font-family:Segoe UI,Arial,sans-serif;color:#80868B;padding:14px'>" & _Titulo & ": sin datos</div>",
 			        "<div style='font-family:Segoe UI,Arial,sans-serif;box-sizing:border-box;height:100%;padding:12px 16px;background:#FFFFFF;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12)'>"
 			            & "<div style='font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#5F6368;margin-bottom:6px'>" & _Titulo & "</div>"
-			            & "<table style='width:100%;border-collapse:collapse;font-size:12px;color:#3C4043'>"
+			            & "<table style='width:100%;height:calc(100% - 24px);border-collapse:collapse;font-size:12px;color:#3C4043'>"
 			                & "<thead><tr>"
 			                    & "<th style='" & _Th & ";padding-left:0;text-align:left'>" & _Encabezado & "</th>"
 			                    & "<th style='" & _Th & ";text-align:right'>Beneficio</th>"

@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
-  "name": "a744a2b67e85b0476145",
+  "name": "3c4d5e6f708192a3b4c5",
   "position": {
-    "x": 4.8257625343631361,
-    "y": 535.05642099751276,
-    "z": 8000,
-    "height": 73.592878649037829,
-    "width": 213.53999214556879,
-    "tabOrder": 8000
+    "x": 1074,
+    "y": 8,
+    "z": 4,
+    "height": 52,
+    "width": 190,
+    "tabOrder": 4
   },
   "visual": {
     "visualType": "slicer",
@@ -23,11 +23,11 @@
                       "Entity": "FuturoTecno_2020_2022"
                     }
                   },
-                  "Property": "Marca"
+                  "Property": "Cliente"
                 }
               },
-              "queryRef": "FuturoTecno_2020_2022.Marca",
-              "nativeQueryRef": "Marca",
+              "queryRef": "FuturoTecno_2020_2022.Cliente",
+              "nativeQueryRef": "Cliente",
               "active": true
             }
           ]
@@ -140,7 +140,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'seg_marca'"
+                  "Value": "'seg_cliente'"
                 }
               }
             },
@@ -177,7 +177,7 @@
     },
     "drillFilterOtherVisuals": true,
     "syncGroup": {
-      "groupName": "Marca",
+      "groupName": "Cliente",
       "fieldChanges": true,
       "filterChanges": true
     }

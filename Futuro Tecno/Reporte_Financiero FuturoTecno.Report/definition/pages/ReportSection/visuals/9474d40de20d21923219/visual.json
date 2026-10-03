@@ -175,6 +175,11 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "syncGroup": {
+      "groupName": "Cliente",
+      "fieldChanges": true,
+      "filterChanges": true
+    }
   }
 }

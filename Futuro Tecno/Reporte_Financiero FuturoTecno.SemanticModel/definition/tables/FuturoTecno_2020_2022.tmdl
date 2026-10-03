@@ -62,11 +62,13 @@ table FuturoTecno_2020_2022
 		mode: import
 		source =
 				let
-				    Source = Excel.Workbook(File.Contents("H:\Mi unidad\Proyectos Personales\power_bi\01-04-24 Datdata El curso más actualizado de Power BI (Proyecto completo)\Registros FuturoTecno.xlsx"), null, true),
+				    Source = Excel.Workbook(File.Contents("H:\Mi unidad\3-Proyectos Personales\power_bi\Proyectos Portafolio\Futuro Tecno\Registros FuturoTecno.xlsx"), null, true),
 				    FuturoTecno_2020_2022_Table = Source{[Item="FuturoTecno_2020_2022",Kind="Table"]}[Data],
-				    #"Changed Type" = Table.TransformColumnTypes(FuturoTecno_2020_2022_Table,{{"Ingresos", type number}, {"Gastos", type number}, {"Fecha", type date}})
+				    #"Changed Type" = Table.TransformColumnTypes(FuturoTecno_2020_2022_Table,{{"Ingresos", type number}, {"Gastos", type number}, {"Fecha", type date}}),
+				    // Actualiza el período: 2020 -> 2023, 2021 -> 2024, 2022 -> 2025
+				    #"Años actualizados" = Table.TransformColumns(#"Changed Type", {{"Fecha", each Date.AddYears(_, 3), type date}})
 				in
-				    #"Changed Type"
+				    #"Años actualizados"
 
 	annotation PBI_ResultType = Table
 
